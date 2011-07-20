@@ -57,7 +57,7 @@ module Coercer
       
       # 3) look at the edges and find the good one
       edge = source_node.out_edges.find{|e| 
-        e.target.domain == target_domain
+        subdomain?(e.target.domain, target_domain)
       }
       unless edge
         raise Error, "No such edge #{source_node.domain} -> #{target_domain}"
@@ -69,6 +69,13 @@ module Coercer
     
     def belongs_to?(value, domain)
       domain === value
+    end
+    
+    def subdomain?(child, parent)
+      return true if child == parent
+      child.superclass ? 
+        subdomain?(child.superclass, parent) :
+        false
     end
     
     protected

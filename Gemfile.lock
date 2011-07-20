@@ -27,6 +27,7 @@ GEM
     yard (0.7.2)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
