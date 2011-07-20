@@ -27,7 +27,7 @@ module Myrrha
         next unless belongs_to?(value, from)
         next unless (ANY==to) || subdomain?(to, target_domain)
         begin
-          return converter.call(value, target_domain)
+          return convert(value, target_domain, converter)
         rescue => ex
           error = ex.message unless error
         end
@@ -50,6 +50,16 @@ module Myrrha
       (child.respond_to?(:superclass) && child.superclass) ? 
         subdomain?(child.superclass, parent) :
         false
+    end
+    
+    def convert(value, target_domain, converter)
+      if converter.respond_to?(:call)
+        converter.call(value, target_domain)
+      elsif converter.is_a?(Class)
+        converter.new(value)
+      else
+        raise ArgumentError, "Unable to use #{converter} for coercing"
+      end
     end
     
   end # class Graph
