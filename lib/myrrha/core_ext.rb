@@ -1,3 +1,4 @@
+require 'myrrha'
 Boolean = Myrrha::Boolean
 
 # 
