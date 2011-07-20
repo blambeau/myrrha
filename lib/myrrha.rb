@@ -12,18 +12,18 @@ module Myrrha
   class Coercions
     
     def initialize
-      @edges = []
+      @rules = []
       yield(self) if block_given?
     end
     
     def coercion(source, target, converter = nil, &convproc)
-      @edges << [source, target, converter || convproc] 
+      @rules << [source, target, converter || convproc] 
     end
     
     def coerce(value, target_domain)
       return value if belongs_to?(value, target_domain)
       error = nil
-      @edges.each do |from,to,converter|
+      @rules.each do |from,to,converter|
         next unless belongs_to?(value, from)
         next unless (ANY==to) || subdomain?(to, target_domain)
         begin
