@@ -48,7 +48,7 @@ describe "Coercer::Ruby" do
   end
   
   specify "Date" do
-    #graph.coerce("2011/07/20", Date).should eq(Date.parse("2011-07-20"))
+    graph.coerce("2011/07/20", Date).should eq(Date.parse("2011-07-20"))
   end
       
 end

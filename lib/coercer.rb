@@ -25,7 +25,7 @@ module Coercer
       error = nil
       @edges.each do |from,to,converter|
         next unless belongs_to?(value, from)
-        next unless subdomain?(to, target_domain)
+        next unless (ANY==to) || subdomain?(to, target_domain)
         begin
           return converter.call(value, target_domain)
         rescue => ex
@@ -50,6 +50,9 @@ module Coercer
     
   end # class Graph
   
+  ANY = Object.new
+
+  # Defines the missing Boolean type
   module Boolean
     def self.superclass; Object; end
     def self.===(val)
@@ -57,6 +60,7 @@ module Coercer
     end
   end
   
+  # Coerces _s_ to a Boolean
   def self.Boolean(s)
     if s.strip == "true"
       true
@@ -67,7 +71,8 @@ module Coercer
     end
   end
   
-  def Parse(s,t)
+  # Tries to parse _s_ thanks to the class _t_
+  def self.Parse(s,t)
     if t.respond_to?(:parse)
       t.parse(s)
     else
@@ -77,10 +82,10 @@ module Coercer
   
   Ruby = Graph.new do |g|
     g.coercion String, Integer, lambda{|s,t| Integer(s)}
-    g.coercion String, Float,   lambda{|s,t| Float(s)  }
+    g.coercion String,   Float, lambda{|s,t| Float(s)  }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)}
-    g.coercion Integer, Float,  lambda{|s,t| Float(s)  }
-    g.coercion String, Object,  lambda{|s,t| Parse(s,t)}
+    g.coercion Integer,  Float, lambda{|s,t| Float(s)  }
+    g.coercion String,     ANY, lambda{|s,t| Parse(s,t)}
   end
   
 end # module Coercer
