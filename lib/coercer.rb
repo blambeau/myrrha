@@ -62,12 +62,13 @@ module Coercer
           begin
             return edge.converter.call(value)
           rescue => ex
-            error = ex unless error
+            error = ex.message unless error
           end
         end
       end
-      error ||= Error.new("Unable to coerce #{value} to #{target_domain}")
-      raise(error)
+      msg = "Unable to coerce `#{value}` to #{target_domain}"
+      msg += " (#{error})" if error
+      raise Error, msg
     end
     
     def belongs_to?(value, domain)

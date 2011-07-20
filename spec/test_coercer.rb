@@ -16,8 +16,12 @@ describe Coercer do
     graph.coerce("12.2", Float).should == 12.2
     graph.coerce("12",   Numeric).should == 12
     graph.coerce("12.2", Numeric).should == 12.2
-    lambda{ graph.coerce(true, Integer) }.should raise_error(Coercer::Error)
-    lambda{ graph.coerce(true, String)  }.should raise_error(Coercer::Error)
+    lambda{ 
+      graph.coerce(true, Integer) 
+    }.should raise_error(Coercer::Error, "Unable to coerce `true` to Integer")
+    lambda{ 
+      graph.coerce("12.2", Integer)
+    }.should raise_error(Coercer::Error, "Unable to coerce `12.2` to Integer (invalid value for Integer: \"12.2\")")
   end
   
 end
