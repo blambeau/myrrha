@@ -3,6 +3,7 @@
 #
 module Coercer
   
+  # Raised when a coercion fails
   class Error < StandardError; end
   
   # 
@@ -20,9 +21,7 @@ module Coercer
     end
     
     def coerce(value, target_domain)
-      # 1) return value if it already belongs to the domain
       return value if belongs_to?(value, target_domain)
-      
       error = nil
       @edges.each do |from,to,converter|
         next unless belongs_to?(value, from)
@@ -50,6 +49,25 @@ module Coercer
     end
     
   end # class Graph
+  
+  module Boolean
+    def self.superclass; Object; end
+  end
+  def self.Boolean(s)
+    if s.strip == "true"
+      true
+    elsif s.strip == "false"
+      false
+    else
+      raise ArgumentError, "invalid value for Boolean: \"#{s}\""
+    end
+  end
+  
+  Ruby = Graph.new do |g|
+    g.coercion String, Integer, lambda{|s| Integer(s)}
+    g.coercion String, Float,   lambda{|s| Float(s)  }
+    g.coercion String, Boolean, lambda{|s| Boolean(s)}
+  end
   
 end # module Coercer
 require "coercer/version"
