@@ -3,7 +3,7 @@ module Myrrha
   describe "Coercions#convert" do
     let(:graph){ Coercions.new }
     
-    subject{ graph.convert("value", String, converter) }
+    subject{ graph.send(:convert, "value", String, converter) }
       
     describe "when passed a proc of arity 2" do
       let(:converter){ lambda{|v,t| [v,t]} }
