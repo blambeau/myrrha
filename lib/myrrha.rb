@@ -3,7 +3,9 @@
 #
 module Myrrha
   
+  #
   # Raised when a coercion fails
+  #
   class Error < StandardError; end
   
   #
@@ -233,10 +235,22 @@ module Myrrha
     end
   end
   
-  # Tries to parse _s_ thanks to the class _t_
+  #
+  # Tries to parse `s` thanks to the class `t`
+  #
+  # This method implements a typical fallback rule for coercing strings to
+  # other domains. It looks for a :parse method on `t` and uses it on `s`
+  # when found. Otherwise, it raises an ArgumentError.
+  #
+  # @param [String] s any String
+  # @param [Domain] t a domain (mimic Domain)
+  # @return [Object] the result of <code>t.parse(s.to_str)</code> if :parse is
+  #         defined.
+  # @raise [ArgumentError] is no such parse method is found.
+  #
   def self.Parse(s,t)
     if t.respond_to?(:parse)
-      t.parse(s)
+      t.parse(s.to_str)
     else
       raise ArgumentError, "#{t} does not parse"
     end
