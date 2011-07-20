@@ -32,10 +32,11 @@ describe Myrrha do
   end
   
   it "should support using matchers" do
+    ArrayOfSymbols = proc{|val| val.is_a?(Array) && val.all?{|x| Symbol===x}}
     graph = Myrrha::Graph.new do |g|
-      ArrayOfSymbols = proc{|val| val.is_a?(Array) && val.all?{|x| Symbol===x}}
       g.coercion ArrayOfSymbols, String, lambda{|x,t| x.join(', ')}
     end
+    graph.coerce([:a, :b], ArrayOfSymbols).should eq([:a, :b])
     graph.coerce([:a, :b], String).should eq("a, b")
   end
   
