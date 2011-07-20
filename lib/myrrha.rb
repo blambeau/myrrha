@@ -5,9 +5,26 @@ module Myrrha
   
   # Raised when a coercion fails
   class Error < StandardError; end
-      
+  
+  #
+  # Builds a set of coercions rules. 
+  #
+  # Example:
+  #
+  #   rules = Myrrha.coercions do |c|
+  #     c.coercion String, Integer, lambda{|s,t| Integer(s)}
+  #     #
+  #     # [...]
+  #     #
+  #     c.fallback String, lambda{|s,t| ... }
+  #   end
+  #
+  def self.coercions(&block)
+    Coercions.new(&block)
+  end
+    
   # 
-  # Defines a coercion graph
+  # Defines a set of coercion rules
   #
   class Coercions
     
@@ -112,7 +129,7 @@ module Myrrha
     end
   end
   
-  Ruby = Coercions.new do |g|
+  Ruby = coercions do |g|
     g.coercion String, Integer, lambda{|s,t| Integer(s)        }
     g.coercion String,   Float, lambda{|s,t| Float(s)          }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
