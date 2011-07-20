@@ -207,13 +207,29 @@ module Myrrha
     
   end # class Coercions
   
-  # Defines the missing Boolean type
+  #
+  # Defines the missing Boolean type.
+  #
+  # This module mimics a Ruby missing Boolean type. 
+  #
   module Boolean
+
+    #
+    # Returns Object, as the superclass of Boolean
+    #
+    # @return [Class] Object
+    #
     def self.superclass; Object; end
+      
+    #
+    # Returns true if `val` is <code>true</code> or <code>false</code>, false 
+    # otherwise.
+    #
     def self.===(val)
       (val == true) || (val == false)
     end
-  end
+    
+  end # module Boolean
   
   #
   # Coerces _s_ to a Boolean
