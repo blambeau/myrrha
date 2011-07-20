@@ -60,7 +60,7 @@ module Coercer
         e.target.domain == target_domain
       }
       unless edge
-        raise Error, "No such edge #{source_domain} -> #{target_domain}"
+        raise Error, "No such edge #{source_node.domain} -> #{target_domain}"
       end
       
       # 4) apply coercion

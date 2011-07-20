@@ -12,8 +12,8 @@ describe Coercer do
     end
     graph.coerce("12",   Integer).should == 12
     graph.coerce("12.2",   Float).should == 12.2
-    #graph.coerce("12",   Numeric).should == 12
-    #graph.coerce("12.2", Numeric).should == 12.2
+    graph.coerce("12",   Numeric).should == 12
+    graph.coerce("12.2", Numeric).should == 12.2
   end
   
 end
