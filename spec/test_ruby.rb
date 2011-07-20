@@ -79,5 +79,14 @@ describe "::Ruby's coercion " do
       coerce("hello", Symbol).should eq(:hello)
     end
   end
+  
+  describe "to Regexp" do
+    specify "from Regexp" do
+      coerce(/[a-z]+/, Regexp).should == /[a-z]+/
+    end
+    specify "from String" do
+      coerce("[a-z]+", Regexp).should == /[a-z]+/
+    end
+  end
 
 end

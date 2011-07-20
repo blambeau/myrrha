@@ -81,12 +81,13 @@ module Myrrha
   end
   
   Ruby = Graph.new do |g|
-    g.coercion String, Integer, lambda{|s,t| Integer(s)}
-    g.coercion String,   Float, lambda{|s,t| Float(s)  }
-    g.coercion String, Boolean, lambda{|s,t| Boolean(s)}
-    g.coercion Integer,  Float, lambda{|s,t| Float(s)  }
-    g.coercion String,  Symbol, lambda{|s,t| s.to_sym  }
-    g.coercion String,     ANY, lambda{|s,t| Parse(s,t)}
+    g.coercion String, Integer, lambda{|s,t| Integer(s)        }
+    g.coercion String,   Float, lambda{|s,t| Float(s)          }
+    g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
+    g.coercion Integer,  Float, lambda{|s,t| Float(s)          }
+    g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
+    g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
+    g.coercion String,     ANY, lambda{|s,t| Parse(s,t)        }
   end
   
 end # module Myrrha
