@@ -213,11 +213,20 @@ module Myrrha
     end
   end
   
+  #
   # Coerces _s_ to a Boolean
+  #
+  # This method mimics Ruby's Integer(), Float(), etc. for Boolean values.
+  #
+  # @param [Object] s a Boolean or a String 
+  # @return [Boolean] true if `s` is already true of the string 'true',
+  #                   false if `s` is already false of the string 'false'.
+  # @raise [ArgumentError] if `s` cannot be coerced to a boolean. 
+  #
   def self.Boolean(s)
-    if s.strip == "true"
+    if (s==true || s.to_str.strip == "true")
       true
-    elsif s.strip == "false"
+    elsif (s==false || s.to_str.strip == "false")
       false
     else
       raise ArgumentError, "invalid value for Boolean: \"#{s}\""
