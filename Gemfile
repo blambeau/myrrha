@@ -1,2 +1,2 @@
 source 'http://rubygems.org'
-gemspec :name => "coercer"
+gemspec :name => "myrrha"

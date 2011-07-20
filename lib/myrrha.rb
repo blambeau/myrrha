@@ -1,7 +1,7 @@
 #
 # Coercion graph
 #
-module Coercer
+module Myrrha
   
   # Raised when a coercion fails
   class Error < StandardError; end
@@ -88,6 +88,6 @@ module Coercer
     g.coercion String,     ANY, lambda{|s,t| Parse(s,t)}
   end
   
-end # module Coercer
-require "coercer/version"
-require "coercer/loader"
+end # module Myrrha
+require "myrrha/version"
+require "myrrha/loader"

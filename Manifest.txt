@@ -1,5 +1,5 @@
-coercer.gemspec
-coercer.noespec
+myrrha.gemspec
+myrrha.noespec
 .gemtest
 CHANGELOG.md
 Gemfile

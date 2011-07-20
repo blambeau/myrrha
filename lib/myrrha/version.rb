@@ -1,4 +1,4 @@
-module Coercer
+module Myrrha
   module Version
   
     MAJOR = 0

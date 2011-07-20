@@ -1,7 +1,7 @@
 require 'spec_helper'
-describe "Coercer::Ruby's coercion " do
+describe "::Ruby's coercion " do
   
-  let(:graph){ Coercer::Ruby }
+  let(:graph){ Myrrha::Ruby }
     
   describe "to Integer" do
     specify "from Integer" do
@@ -13,7 +13,7 @@ describe "Coercer::Ruby's coercion " do
       graph.coerce("0",    Integer).should eq(0)
     end
     specify "on error" do
-      lambda{graph.coerce("abc",  Integer)}.should raise_error(Coercer::Error)
+      lambda{graph.coerce("abc",  Integer)}.should raise_error(Myrrha::Error)
     end
   end
   
@@ -33,7 +33,7 @@ describe "Coercer::Ruby's coercion " do
       graph.coerce("-12.2", Float).should eq(-12.2)
     end
     specify "on error" do
-      lambda{graph.coerce("abc",  Float)}.should raise_error(Coercer::Error)
+      lambda{graph.coerce("abc",  Float)}.should raise_error(Myrrha::Error)
     end
   end
   
@@ -54,7 +54,7 @@ describe "Coercer::Ruby's coercion " do
       graph.coerce("false", Boolean).should eq(false)
     end
     specify "on error" do
-      lambda{graph.coerce("abc", Boolean)}.should raise_error(Coercer::Error)
+      lambda{graph.coerce("abc", Boolean)}.should raise_error(Myrrha::Error)
     end
   end
 

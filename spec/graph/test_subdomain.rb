@@ -1,5 +1,5 @@
 require 'spec_helper'
-module Coercer
+module Myrrha
   describe "Graph#subdomain?" do
     let(:graph){ Graph.new }
     

@@ -1,8 +1,8 @@
 # We require your library, mainly to have access to the VERSION number. 
 # Feel free to set $version manually.
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
-require "coercer/version"
-$version = Coercer::Version.to_s
+require "myrrha/version"
+$version = Myrrha::Version.to_s
 
 #
 # This is your Gem specification. Default values are provided so that your library
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   ################################################################### ABOUT YOUR GEM
   
   # Gem name (required) 
-  s.name = "coercer"
+  s.name = "myrrha"
   
   # Gem version (required)
   s.version = $version
@@ -21,16 +21,16 @@ Gem::Specification.new do |s|
   # A short summary of this gem
   #
   # This is displayed in `gem list -d`.
-  s.summary = "Coercion graph"
+  s.summary = "Myrrha provides the missing ruby coercion framework"
 
   # A long description of this gem (required)
   #
   # The description should be more detailed than the summary.  For example,
   # you might wish to copy the entire README into the description.
-  s.description = "Coercer provides the ability to build and use coercion graphs"
+  s.description = "Myrrha provides the ability to build and use coercion graphs."
   
   # The URL of this gem home page (optional)
-  s.homepage = "http://rubydoc.info/github/blambeau/coercer/master/frames"
+  s.homepage = "http://rubydoc.info/github/blambeau/myrrha/master/frames"
 
   # Gem publication date (required but auto)
   #

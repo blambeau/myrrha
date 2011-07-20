@@ -7,7 +7,7 @@ rescue LoadError => ex
 end
 
 # Dynamically load the gem spec
-$gemspec_file = File.expand_path('../coercer.gemspec', __FILE__)
+$gemspec_file = File.expand_path('../myrrha.gemspec', __FILE__)
 $gemspec      = Kernel.eval(File.read($gemspec_file))
 
 # We run tests by default
