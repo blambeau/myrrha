@@ -42,7 +42,7 @@ describe Myrrha do
   
   it "should support using any object that respond to call as converter" do
     converter = Object.new
-    def converter.call(arg, t); arg.to_sym; end
+    def converter.call(arg); arg.to_sym; end
     graph = Myrrha::Graph.new do |g|
       g.coercion String, Symbol, converter
     end

@@ -54,7 +54,14 @@ module Myrrha
     
     def convert(value, target_domain, converter)
       if converter.respond_to?(:call)
-        converter.call(value, target_domain)
+        case (converter.respond_to?(:arity) ? converter.arity : 1)
+        when 1
+          converter.call(value)
+        when 2
+          converter.call(value, target_domain)
+        else
+          raise ArgumentError, "Unexpected converter arity #{converter.arity}"
+        end
       elsif converter.is_a?(Class)
         converter.new(value)
       else
