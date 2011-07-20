@@ -8,7 +8,7 @@ Myrrha provides the coercion framework which is missing to Ruby.
 * http://github.com/blambeau/myrrha
 * http://rubygems.org/gems/myrrha
 
-### The missing Ruby feature
+### The missing coerce() core feature
 
     require 'myrrha/core_ext'
     

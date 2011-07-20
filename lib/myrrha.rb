@@ -273,7 +273,7 @@ module Myrrha
   end
   
   # Defines basic coercions for Ruby, mostly from String 
-  Ruby = coercions do |g|
+  CoerceRules = coercions do |g|
     g.coercion String, Integer, lambda{|s,t| Integer(s)        }
     g.coercion String,   Float, lambda{|s,t| Float(s)          }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
@@ -282,6 +282,25 @@ module Myrrha
     g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
     g.fallback String,          lambda{|s,t| Parse(s,t)        }
   end
+  
+  # Encapsulates core extensions to the Object class
+  module CoreExt
+    
+    # 
+    # Coerces _value_ to an instance of _domain_
+    #
+    def coercion(value, clazz)
+      CoerceRules.coerce(value, clazz)
+    end
+    
+    # (see Myrrha.Boolean)
+    def Boolean(s)
+      Myrrha.Boolean(s)
+    end
+    
+    Boolean = Myrrha::Boolean
+  end # module CoreExt
+  include CoreExt
   
 end # module Myrrha
 require "myrrha/version"
