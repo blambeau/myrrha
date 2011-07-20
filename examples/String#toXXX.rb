@@ -13,7 +13,7 @@ require 'date'
 rules = Myrrha.coercions do |r|
   r.coercion String, Integer, lambda{|s,t| Integer(s)    }
   r.coercion String,   Float, lambda{|s,t| Float(s)      }
-  r.coercion String,   Date,  lambda{|s,t| Date.parse(s) }
+  r.coercion String,    Date, lambda{|s,t| Date.parse(s) }
   # ... add your own rules here ...
 end
 
