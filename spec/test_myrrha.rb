@@ -21,7 +21,7 @@ describe Myrrha do
     }.should raise_error(Myrrha::Error, "Unable to coerce `true` to Integer")
     lambda{ 
       graph.coerce("12.2", Integer)
-    }.should raise_error(Myrrha::Error, "Unable to coerce `12.2` to Integer (invalid value for Integer: \"12.2\")")
+    }.should raise_error(Myrrha::Error, /^Unable to coerce `12.2` to Integer \(invalid value /)
   end
   
   it "should support all-catching rules" do
