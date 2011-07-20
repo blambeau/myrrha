@@ -6,7 +6,7 @@ describe Myrrha do
   end
   
   it "should provide the abitity to define a coercion graph" do
-    graph = Myrrha::Graph.new do |g|
+    graph = Myrrha::Coercions.new do |g|
       g.coercion String, Integer, lambda{|s,t| Integer(s)}
       g.coercion String, Float,   lambda{|s,t| Float(s)  }
     end
@@ -25,7 +25,7 @@ describe Myrrha do
   end
   
   it "should support all-catching rules" do
-    graph = Myrrha::Graph.new do |g|
+    graph = Myrrha::Coercions.new do |g|
       g.coercion String, Myrrha::ANY, lambda{|s,t| :world}
     end
     graph.coerce("hello", Symbol).should eq(:world)
@@ -33,7 +33,7 @@ describe Myrrha do
   
   it "should support using matchers" do
     ArrayOfSymbols = proc{|val| val.is_a?(Array) && val.all?{|x| Symbol===x}}
-    graph = Myrrha::Graph.new do |g|
+    graph = Myrrha::Coercions.new do |g|
       g.coercion ArrayOfSymbols, String, lambda{|x,t| x.join(', ')}
     end
     graph.coerce([:a, :b], ArrayOfSymbols).should eq([:a, :b])
@@ -43,7 +43,7 @@ describe Myrrha do
   it "should support using any object that respond to call as converter" do
     converter = Object.new
     def converter.call(arg); arg.to_sym; end
-    graph = Myrrha::Graph.new do |g|
+    graph = Myrrha::Coercions.new do |g|
       g.coercion String, Symbol, converter
     end
     graph.coerce("hello", Symbol).should eq(:hello)
@@ -55,7 +55,7 @@ describe Myrrha do
       def initialize(arg); @arg = arg; end
       def ==(other); other.is_a?(Foo) && (other.arg==arg); end
     end
-    graph = Myrrha::Graph.new do |g|
+    graph = Myrrha::Coercions.new do |g|
       g.coercion String, Foo, Foo
     end
     graph.coerce("hello", Foo).should eq(Foo.new("hello"))

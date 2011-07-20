@@ -9,7 +9,7 @@ module Myrrha
   # 
   # Defines a coercion graph
   #
-  class Graph
+  class Coercions
     
     def initialize
       @edges = []
@@ -69,7 +69,7 @@ module Myrrha
       end
     end
     
-  end # class Graph
+  end # class Coercions
   
   ANY = Object.new
 
@@ -101,7 +101,7 @@ module Myrrha
     end
   end
   
-  Ruby = Graph.new do |g|
+  Ruby = Coercions.new do |g|
     g.coercion String, Integer, lambda{|s,t| Integer(s)        }
     g.coercion String,   Float, lambda{|s,t| Float(s)          }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
