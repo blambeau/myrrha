@@ -34,6 +34,10 @@ module Myrrha
       yield(self) if block_given?
     end
     
+    def append
+      yield(self) if block_given?
+    end
+    
     def coercion(source, target, converter = nil, &convproc)
       @rules << [source, target, converter || convproc] 
     end
