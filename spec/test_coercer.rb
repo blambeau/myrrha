@@ -7,8 +7,8 @@ describe Coercer do
   
   it "should provide the abitity to define a coercion graph" do
     graph = Coercer::Graph.new do |g|
-      g.coercion String, Integer, lambda{|s| Integer(s)}
-      g.coercion String, Float,   lambda{|s| Float(s)  }
+      g.coercion String, Integer, lambda{|s,t| Integer(s)}
+      g.coercion String, Float,   lambda{|s,t| Float(s)  }
     end
     graph.coerce(12,     Integer).should == 12
     graph.coerce("12",   Integer).should == 12

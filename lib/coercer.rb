@@ -27,7 +27,7 @@ module Coercer
         next unless belongs_to?(value, from)
         next unless subdomain?(to, target_domain)
         begin
-          return converter.call(value)
+          return converter.call(value, target_domain)
         rescue => ex
           error = ex.message unless error
         end
@@ -56,6 +56,7 @@ module Coercer
       (val == true) || (val == false)
     end
   end
+  
   def self.Boolean(s)
     if s.strip == "true"
       true
@@ -66,11 +67,20 @@ module Coercer
     end
   end
   
+  def Parse(s,t)
+    if t.respond_to?(:parse)
+      t.parse(s)
+    else
+      raise ArgumentError, "#{t} does not parse"
+    end
+  end
+  
   Ruby = Graph.new do |g|
-    g.coercion String, Integer, lambda{|s| Integer(s)}
-    g.coercion String, Float,   lambda{|s| Float(s)  }
-    g.coercion String, Boolean, lambda{|s| Boolean(s)}
-    g.coercion Integer, Float,  lambda{|s| Float(s)  }
+    g.coercion String, Integer, lambda{|s,t| Integer(s)}
+    g.coercion String, Float,   lambda{|s,t| Float(s)  }
+    g.coercion String, Boolean, lambda{|s,t| Boolean(s)}
+    g.coercion Integer, Float,  lambda{|s,t| Float(s)  }
+    g.coercion String, Object,  lambda{|s,t| Parse(s,t)}
   end
   
 end # module Coercer
