@@ -8,7 +8,7 @@ Myrrha provides the coercion framework which is missing to Ruby.
 * http://github.com/blambeau/myrrha
 * http://rubygems.org/gems/myrrha
 
-### The missing coercion() core feature
+### The missing coercion() feature
 
     require 'myrrha/core_ext'
     
@@ -33,3 +33,32 @@ Myrrha provides the coercion framework which is missing to Ruby.
     require 'uri'
     coercion('http://google.com', URI)  # => #<URI::HTTP:0x8281ce0 URL:http://google.com>    
 
+### The missing to_ruby_literal() feature
+
+Myrrha also implements Object#to_ruby_literal, which has a very simple 
+specification. Given an object o that can be considered as a true _value_, the 
+result of o.to_ruby_literal must be such that the following invariant holds:
+
+    Kernel.eval(o.to_ruby_literal) == o 
+
+That is, parsing & evaluating the literal yields the same value. For almost all 
+ruby classes, but not all, using o.inspect is safe. For example, you can check 
+that the following is true:
+ 
+    Kernel.eval("hello".inspect) == "hello"
+    # => true
+
+Unfortunately, this is not always the case:
+
+    Kernel.eval(Date.today.inspect) == Date.today
+    # => false (because Date.today.inspect yields "#<Date: 2011-07-20 ...")
+
+Myrrha implements a very simple set of rules for implementing to_ruby_literal
+that works:
+
+    require 'myrrha/core_ext'
+    
+    1.to_ruby_literal                       # => 1      
+    Date.today.to_ruby_literal              # => Marshal.load("...")
+    ["hello", Date.today].to_ruby_literal   # => ["hello", Marshal.load("...")]
+    
