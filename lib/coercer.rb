@@ -52,6 +52,9 @@ module Coercer
   
   module Boolean
     def self.superclass; Object; end
+    def self.===(val)
+      (val == true) || (val == false)
+    end
   end
   def self.Boolean(s)
     if s.strip == "true"

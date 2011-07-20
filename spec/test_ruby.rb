@@ -35,6 +35,9 @@ describe "Coercer::Ruby" do
   end
   
   specify "Boolean" do    
+    # from Boolean
+    graph.coerce(true,  Boolean).should eq(true)
+    graph.coerce(false, Boolean).should eq(false)
     # from String
     graph.coerce("true",  Boolean).should eq(true)
     graph.coerce("false", Boolean).should eq(false)
