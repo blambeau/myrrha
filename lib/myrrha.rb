@@ -85,6 +85,7 @@ module Myrrha
     g.coercion String,   Float, lambda{|s,t| Float(s)  }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)}
     g.coercion Integer,  Float, lambda{|s,t| Float(s)  }
+    g.coercion String,  Symbol, lambda{|s,t| s.to_sym  }
     g.coercion String,     ANY, lambda{|s,t| Parse(s,t)}
   end
   

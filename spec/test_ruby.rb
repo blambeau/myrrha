@@ -70,5 +70,14 @@ describe "::Ruby's coercion " do
       coerce("2011-07-20 10:53", Time).should eq(expected)
     end
   end
+  
+  describe "to Symbol" do
+    specify "from Symbol" do
+      coerce(:hello, Symbol).should eq(:hello)
+    end
+    specify "from String" do
+      coerce("hello", Symbol).should eq(:hello)
+    end
+  end
 
 end
