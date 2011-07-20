@@ -31,7 +31,7 @@ require 'time'
 
 # These are all classes for which using inspect is safe
 INSPECT_SAFE = [ NilClass, TrueClass, FalseClass, Fixnum, Bignum, Float, 
-  String, Symbol, Class, Module, Regexp ]
+  String, Symbol, Class, Module, Regexp, Range ]
 
 #
 # These are the Myrrha rules
@@ -43,6 +43,14 @@ rules = Myrrha.coercions do |r|
   r.coercion(safe, :to_ruby_literal) do |s,t| 
     s.inspect
   end
+  r.coercion(Array, :to_ruby_literal) do |s,t|
+    "[" + s.collect{|v| r.coerce(v, :to_ruby_literal)}.join(', ') + "]"
+  end
+  r.coercion(Hash, :to_ruby_literal) do |s,t|
+    "{" + s.collect{|k,v| 
+      r.coerce(k, :to_ruby_literal) + " => " + r.coerce(v, :to_ruby_literal) 
+    }.join(', ') + "}"
+  end
   r.fallback(Object) do |s,t| 
     "Marshal.load(#{Marshal.dump(s).inspect})"
   end
@@ -50,7 +58,10 @@ end
 
 # Have a look at this!
 puts rules.coerce(1, :to_ruby_literal)
+puts rules.coerce(1...10, :to_ruby_literal)
 puts rules.coerce(Date.today, :to_ruby_literal)
+puts rules.coerce(["hello", Date.today], :to_ruby_literal)
+puts rules.coerce({"hello" => Date.today}, :to_ruby_literal)
 
 #
 # You can even override the default Marshal behavior later, 
@@ -78,15 +89,23 @@ SAFE_VALUES = {
   Symbol     => [ :hello, :"s-b-y-c", :"12" ],
   Class      => [ Integer, ::Struct::Tms ],
   Module     => [ Kernel, Myrrha ],
-  Regexp     => [ /a-z/, /^$/, /\s*/, /[a-z]{15}/ ]
+  Regexp     => [ /a-z/, /^$/, /\s*/, /[a-z]{15}/ ],
+  Range      => [ 0..10, 0...10 ],
+  Array      => [ [], [nil], [1, "hello"] ],
+  Hash       => [ {}, {1 => 2, :hello => "world"} ]
 }.values.inject([], :+)
 
 UNSAFE_VALUES = {
-  Date => [ Date.today ],
-  Time => [ Time.now   ]
+  Date  => [ Date.today ],
+  Time  => [ Time.now   ],
+  Array => [ [Date.today, Time.now] ],
+  Hash  => [ {Date.today => Time.now} ]
 }.values.inject([], :+)
 
 (SAFE_VALUES + UNSAFE_VALUES).each do |value|
-  Kernel.eval(rules.coerce(value, :to_ruby_literal)).should eq(value)
+  lit    = rules.coerce(value, :to_ruby_literal)
+  parsed = Kernel.eval(lit)
+  puts "eval(#{lit.inspect}) == #{lit} ? #{value == parsed}" 
+  parsed.should eq(value)
 end
 
