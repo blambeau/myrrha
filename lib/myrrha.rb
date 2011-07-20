@@ -5,7 +5,7 @@ module Myrrha
   
   # Raised when a coercion fails
   class Error < StandardError; end
-  
+      
   # 
   # Defines a coercion graph
   #
@@ -38,12 +38,16 @@ module Myrrha
     end
     
     def belongs_to?(value, domain)
-      domain === value
+      if domain.is_a?(Proc) && (RUBY_VERSION < "1.9")
+        domain.call(value)
+      else
+        domain === value
+      end
     end
     
     def subdomain?(child, parent)
       return true if child == parent
-      child.superclass ? 
+      (child.respond_to?(:superclass) && child.superclass) ? 
         subdomain?(child.superclass, parent) :
         false
     end
