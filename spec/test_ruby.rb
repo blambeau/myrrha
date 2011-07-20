@@ -18,7 +18,9 @@ describe "Coercer::Ruby" do
     # from Float
     graph.coerce(12.2,   Float).should eq(12.2)
     # from Integer
-    #graph.coerce(12,     Float).should eq(12.0)
+    graph.coerce(0,      Float).should eq(0.0)
+    graph.coerce(12,     Float).should eq(12.0)
+    graph.coerce(-12,    Float).should eq(-12.0)
     # from String
     graph.coerce("12.2", Float).should eq(12.2)
     graph.coerce("0",    Float).should eq(0.0)

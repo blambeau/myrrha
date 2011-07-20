@@ -70,6 +70,7 @@ module Coercer
     g.coercion String, Integer, lambda{|s| Integer(s)}
     g.coercion String, Float,   lambda{|s| Float(s)  }
     g.coercion String, Boolean, lambda{|s| Boolean(s)}
+    g.coercion Integer, Float,  lambda{|s| Float(s)  }
   end
   
 end # module Coercer
