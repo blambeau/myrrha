@@ -50,21 +50,18 @@ module Coercer
       return value if belongs_to?(value, target_domain)
       
       # 2) find the corresponding source domain
-      source_node = @nodes.find{|n| belongs_to?(value, n.domain)}
-      unless source_node
-        raise Error, "No source domain for #{value}"
+      @nodes.each do |source_node|
+        next unless belongs_to?(value, source_node.domain)
+        
+        # 3) look at the edges
+        source_node.out_edges.each do |edge|
+          next unless subdomain?(edge.target.domain, target_domain)
+
+          # 4) apply coercion
+          return edge.converter.call(value)
+        end
       end
-      
-      # 3) look at the edges and find the good one
-      edge = source_node.out_edges.find{|e| 
-        subdomain?(e.target.domain, target_domain)
-      }
-      unless edge
-        raise Error, "No such edge #{source_node.domain} -> #{target_domain}"
-      end
-      
-      # 4) apply coercion
-      edge.converter.call(value)
+      raise Error, "Unable to coerce #{value} to #{target_domain}"
     end
     
     def belongs_to?(value, domain)
