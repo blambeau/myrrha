@@ -49,6 +49,7 @@ module Coercer
       # 1) return value if it already belongs to the domain
       return value if belongs_to?(value, target_domain)
       
+      error = nil
       # 2) find the corresponding source domain
       @nodes.each do |source_node|
         next unless belongs_to?(value, source_node.domain)
@@ -58,10 +59,15 @@ module Coercer
           next unless subdomain?(edge.target.domain, target_domain)
 
           # 4) apply coercion
-          return edge.converter.call(value)
+          begin
+            return edge.converter.call(value)
+          rescue => ex
+            error = ex unless error
+          end
         end
       end
-      raise Error, "Unable to coerce #{value} to #{target_domain}"
+      error ||= Error.new("Unable to coerce #{value} to #{target_domain}")
+      raise(error)
     end
     
     def belongs_to?(value, domain)
