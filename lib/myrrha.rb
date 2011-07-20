@@ -13,6 +13,7 @@ module Myrrha
     
     def initialize
       @rules = []
+      @fallbacks = []
       yield(self) if block_given?
     end
     
@@ -20,12 +21,24 @@ module Myrrha
       @rules << [source, target, converter || convproc] 
     end
     
+    def fallback(source, converter = nil, &convproc)
+      @fallbacks << [source, converter || convproc]
+    end
+    
     def coerce(value, target_domain)
       return value if belongs_to?(value, target_domain)
       error = nil
       @rules.each do |from,to,converter|
         next unless belongs_to?(value, from)
-        next unless (ANY==to) || subdomain?(to, target_domain)
+        next unless subdomain?(to, target_domain)
+        begin
+          return convert(value, target_domain, converter)
+        rescue => ex
+          error = ex.message unless error
+        end
+      end
+      @fallbacks.each do |from,converter|
+        next unless belongs_to?(value, from)
         begin
           return convert(value, target_domain, converter)
         rescue => ex
@@ -71,8 +84,6 @@ module Myrrha
     
   end # class Coercions
   
-  ANY = Object.new
-
   # Defines the missing Boolean type
   module Boolean
     def self.superclass; Object; end
@@ -108,7 +119,7 @@ module Myrrha
     g.coercion Integer,  Float, lambda{|s,t| Float(s)          }
     g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
     g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
-    g.coercion String,     ANY, lambda{|s,t| Parse(s,t)        }
+    g.fallback String,          lambda{|s,t| Parse(s,t)        }
   end
   
 end # module Myrrha

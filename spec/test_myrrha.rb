@@ -24,9 +24,9 @@ describe Myrrha do
     }.should raise_error(Myrrha::Error, /^Unable to coerce `12.2` to Integer \(invalid value /)
   end
   
-  it "should support all-catching rules" do
+  it "should support fallback rules" do
     graph = Myrrha::Coercions.new do |g|
-      g.coercion String, Myrrha::ANY, lambda{|s,t| :world}
+      g.fallback String, lambda{|s,t| :world}
     end
     graph.coerce("hello", Symbol).should eq(:world)
   end
