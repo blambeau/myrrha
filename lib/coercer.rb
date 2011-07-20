@@ -45,19 +45,33 @@ module Coercer
       connect(node(source, true), node(target, true), converter)
     end
     
-    def coerce(value, domain)
-      source_domain = value.class
-      source_node = node(source_domain, false)
+    def coerce(value, target_domain)
+      # 1) return value if it already belongs to the domain
+      return value if belongs_to?(value, target_domain)
+      
+      # 2) find the corresponding source domain
+      source_node = @nodes.find{|n| belongs_to?(value, n.domain)}
       unless source_node
-        raise Error, "No such source domain #{source_domain}"
+        raise Error, "No source domain for #{value}"
       end
+      
+      # 3) look at the edges and find the good one
       edge = source_node.out_edges.find{|e| 
-        e.target.domain == domain
+        e.target.domain == target_domain
       }
+      unless edge
+        raise Error, "No such edge #{source_domain} -> #{target_domain}"
+      end
+      
+      # 4) apply coercion
       edge.converter.call(value)
     end
     
-    protected 
+    def belongs_to?(value, domain)
+      value.class == domain
+    end
+    
+    protected
     
     def node(domain, create)
       found = @nodes.find{|n| n.domain == domain}
