@@ -283,6 +283,30 @@ module Myrrha
     g.fallback String,          lambda{|s,t| Parse(s,t)        }
   end
   
+  # These are all classes for which using inspect is safe for to_ruby_literal
+  TO_RUBY_THROUGH_INSPECT = [ NilClass, TrueClass, FalseClass, 
+                              Fixnum, Bignum, Float, 
+                              String, Symbol, Class, Module, Regexp, Range ]
+  
+  # Defines basic coercions for implementing to_ruby_literal
+  ToRubyLiteralRules = coercions do |r|
+    safe = lambda{|x| TO_RUBY_THROUGH_INSPECT.include?(x.class)}
+    r.coercion(safe, :to_ruby_literal) do |s,t| 
+      s.inspect
+    end
+    r.coercion(Array, :to_ruby_literal) do |s,t|
+      "[" + s.collect{|v| r.coerce(v, :to_ruby_literal)}.join(', ') + "]"
+    end
+    r.coercion(Hash, :to_ruby_literal) do |s,t|
+      "{" + s.collect{|k,v| 
+        r.coerce(k, :to_ruby_literal) + " => " + r.coerce(v, :to_ruby_literal) 
+      }.join(', ') + "}"
+    end
+    r.fallback(Object) do |s,t| 
+      "Marshal.load(#{Marshal.dump(s).inspect})"
+    end
+  end
+  
   # Encapsulates core extensions to the Object class
   module CoreExt
     
@@ -291,6 +315,13 @@ module Myrrha
     #
     def coercion(value, clazz)
       CoerceRules.coerce(value, clazz)
+    end
+    
+    #
+    # Converts this value to a ruby literal
+    #
+    def to_ruby_literal
+      ToRubyLiteralRules.coerce(self, :to_ruby_literal)
     end
     
     # (see Myrrha.Boolean)
