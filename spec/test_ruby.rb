@@ -82,10 +82,17 @@ describe "::Ruby's coercion " do
   
   describe "to Regexp" do
     specify "from Regexp" do
-      coerce(/[a-z]+/, Regexp).should == /[a-z]+/
+      coerce(/[a-z]+/, Regexp).should eq(/[a-z]+/)
     end
     specify "from String" do
-      coerce("[a-z]+", Regexp).should == /[a-z]+/
+      coerce("[a-z]+", Regexp).should eq(/[a-z]+/)
+    end
+  end
+  
+  describe "to URI" do
+    require 'uri'
+    specify "from String" do
+      coerce("http://www.google.com/", URI).should eq(URI.parse("http://www.google.com/"))
     end
   end
 
