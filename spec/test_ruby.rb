@@ -57,13 +57,20 @@ describe "Coercer::Ruby's coercion " do
       lambda{graph.coerce("abc", Boolean)}.should raise_error(Coercer::Error)
     end
   end
-  
+
   describe "to Date" do
     let(:expected){ Date.parse("2011-07-20") }
     specify "from String" do
-      graph.coerce("2011/07/20", Date).should eq(expected)
+      graph.coerce("2011-07-20", Date).should eq(expected)
       graph.coerce("2011/07/20", Date).should eq(expected)
     end
   end
       
+  describe "to Time" do
+    let(:expected){ Time.parse("2011-07-20 10:53") }
+    specify "from String" do
+      graph.coerce("2011-07-20 10:53", Time).should eq(expected)
+    end
+  end
+
 end
