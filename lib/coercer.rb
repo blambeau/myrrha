@@ -68,7 +68,7 @@ module Coercer
     end
     
     def belongs_to?(value, domain)
-      value.class == domain
+      domain === value
     end
     
     protected
