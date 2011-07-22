@@ -39,7 +39,7 @@ class API
   # as Foo instances
   Coercions = Myrrha.coercions do |r|
     FriendlyFoo = lambda{|v| v.is_a?(Array) and v.all?{|s| s.is_a?(Symbol)}}
-    r.coercion FriendlyFoo, Foo, lambda{|v| Foo.new(v)}
+    r.coercion FriendlyFoo, Foo, lambda{|v,t| Foo.new(v)}
   end
     
   #
