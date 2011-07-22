@@ -9,19 +9,14 @@ module Myrrha
       let(:converter){ lambda{|v,t| [v,t]} }
       it{ should eq(["value", String]) }
     end
-    
-    describe "when passed a proc of arity 1" do
-      let(:converter){ lambda{|v| v} }
-      it{ should eq("value") }
-    end
       
-    describe "when passed an object that respond to call (1)" do
+    describe "when passed an object that respond to call" do
       let(:converter){ 
         o = Object.new
-        def o.call(arg); arg; end
+        def o.call(arg, t); [arg, t]; end
         o
       }
-      it{ should eq("value") }
+      it{ should eq(["value", String]) }
     end
 
   end

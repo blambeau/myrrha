@@ -42,23 +42,11 @@ describe Myrrha do
   
   it "should support using any object that respond to call as converter" do
     converter = Object.new
-    def converter.call(arg); arg.to_sym; end
+    def converter.call(arg, t); [arg, t]; end
     rules = Myrrha.coercions do |g|
       g.coercion String, Symbol, converter
     end
-    rules.coerce("hello", Symbol).should eq(:hello)
-  end
-  
-  it "should support using a class a converter" do
-    class Foo
-      attr_reader :arg
-      def initialize(arg); @arg = arg; end
-      def ==(other); other.is_a?(Foo) && (other.arg==arg); end
-    end
-    rules = Myrrha.coercions do |g|
-      g.coercion String, Foo, Foo
-    end
-    rules.coerce("hello", Foo).should eq(Foo.new("hello"))
+    rules.coerce("hello", Symbol).should eq(["hello", Symbol])
   end
   
   it "should support adding rules later" do
