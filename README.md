@@ -2,7 +2,11 @@
 
 ## Description
 
-Myrrha provides the coercion framework which is missing to Ruby, IMHO. 
+Myrrha provides the coercion framework which is missing to Ruby, IMHO. Coercions
+are simply defined as a set of rules for converting values from source to target
+domains (in an abstract sense). As a typical and useful example, it comes bundled
+with a coerce() method providing a unique entry point for converting a string to 
+a numeric, a boolean, a date, a time, an URI, and so on.  
 
 ### Install
 
