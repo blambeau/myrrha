@@ -70,6 +70,51 @@ possible and even straightforward:
     Myrrha.coerce("true", Myrrha::Boolean)  # => true
     # [... and so on ...]
 
+### Adding your own coercions
+
+The easiest way to add additional coercions is to implement a <code>coerce</code>
+method on you class; it will be used in priority.
+
+    class Foo
+      def initialize(arg)
+        @arg = arg
+      end
+      def self.coerce(arg)
+        Foo.new(arg)
+      end
+    end
+    
+    Myrrha.coerce(:hello, Foo) 
+    # => #<Foo:0x869eee0 @arg=:hello>
+
+If <code>Foo</code> is not your code and you don't want to make core extensions
+by adding a <code>coerce</code> class method, you can simply add new rules to 
+Myrrha itself:
+
+    Myrrha::CoerceRules.append do |r|
+      r.coercion(Symbol, Foo) do |value, _|
+        Foo.new(value)
+      end
+    end
+    
+    Myrrha.coerce(:hello, Foo) 
+    # => #<Foo:0x8866f84 @arg=:hello>
+
+Now, doing so, the new coercion rule will be shared with all Myrrha users, which 
+might be intrusive. Why not using your own set of coercion rules?
+
+    MyRules = Myrrha::CoerceRules.dup.append do |r|
+      r.coercion(Symbol, Foo) do |value, _|
+        Foo.new(value)
+      end
+    end 
+    
+    Myrrha.coerce(:hello, Foo)
+    # => Myrrha::Error: Unable to coerce `hello` to Foo
+    
+    MyRules.coerce(:hello, Foo) 
+    # =>  #<Foo:0x8b7d254 @arg=:hello>
+
 ## The missing <code>to\_ruby\_literal()</code>
 
     Myrrha.to_ruby_literal([:anything]) 
@@ -123,7 +168,7 @@ simply fallbacks to <code>Marshal.load(...)</code> when the strategy fails:
     today = Date.today
     (today..today+1).to_ruby_literal        # => "Marshal.load('...')"
 
-### No core extension? No problem!
+### No core extension? no problem!
 
     require 'date'
     require 'myrrha/to_ruby_literal'
@@ -131,6 +176,49 @@ simply fallbacks to <code>Marshal.load(...)</code> when the strategy fails:
     Myrrha.to_ruby_literal(1)              # => 1
     Myrrha.to_ruby_literal(Date.today)     # => Marshal.load("...")
     # [... and so on ...]
+
+### Adding your own rules
+
+The easiest way is simply to override <code>to\_ruby\_literal</code> in your
+class
+
+    class Foo
+      attr_reader :arg
+      def initialize(arg)
+        @arg = arg
+      end
+      def to_ruby_literal
+        "Foo.new(#{arg.inspect})"
+      end
+    end
+    
+    Myrrha.to_ruby_literal(Foo.new(:hello))
+    # => "Foo.new(:hello)" 
+
+As with coerce, contributing your own rule to Myrrha is possible:
+
+    Myrrha::ToRubyLiteralRules.append do |r|
+      r.coercion(Foo, :to_ruby_literal) do |foo, _|
+        "Foo.new(#{foo.arg.inspect})"
+      end
+    end
+
+    Myrrha.to_ruby_literal(Foo.new(:hello))
+    # => "Foo.new(:hello)" 
+    
+And building your own set of rules is possible as well:
+
+    MyRules = Myrrha::ToRubyLiteralRules.dup.append do |r|
+      r.coercion(Foo, :to_ruby_literal) do |foo, _|
+        "Foo.new(#{foo.arg.inspect})"
+      end
+    end
+
+    Myrrha::ToRubyLiteralRules.coerce(Foo.new(:hello), :to_ruby_literal)
+    # => "Marshal.load('...')"
+    
+    MyRules.coerce(Foo.new(:hello), :to_ruby_literal)
+    # => "Foo.new(:hello)" 
     
 ### Limitation
 
