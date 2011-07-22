@@ -55,6 +55,7 @@ module Myrrha
     #
     def append
       yield(self) if block_given?
+      self
     end
     
     #
