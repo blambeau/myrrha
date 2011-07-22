@@ -59,16 +59,16 @@ Myrrha provides the coercion framework which is missing to Ruby, IMHO.
 
 ### What for?
 
-Myrrha also implements <code>Object#to\_ruby\_literal</code>, which has a very 
-simple specification. Given an object o that can be considered as a true 
-_value_, the result of <code>o.to_ruby_literal</code> must be such that the 
-following invariant holds:
+<code>Object#to\_ruby\_literal</code> has a very simple specification. Given an 
+object o that can be considered as a true _value_, the result of 
+<code>o.to\_ruby\_literal</code> must be such that the following invariant 
+holds:
 
     Kernel.eval(o.to_ruby_literal) == o 
 
 That is, parsing & evaluating the literal yields the same value. For almost all 
-ruby classes, but not all, using o.inspect is safe. For example, you can check 
-that the following is true:
+ruby classes, but not all, using o.inspect respects the invariant. For example, 
+the following is true:
  
     Kernel.eval("hello".inspect) == "hello"
     # => true
@@ -76,20 +76,32 @@ that the following is true:
 Unfortunately, this is not always the case:
 
     Kernel.eval(Date.today.inspect) == Date.today
-    # => false (because Date.today.inspect yields "#<Date: 2011-07-20 ...")
+    # => false 
+    # => because Date.today.inspect yields "#<Date: 2011-07-20 ...", which is a comment
+
+When generating (human-readable) ruby code, having a unique entry point that 
+respects the specification is very useful. 
 
 ### Example
 
-Myrrha implements a very simple set of rules for implementing to\_ruby\_literal
-that works:
+Myrrha implements a very simple set of rules for implementing 
+<code>Object#to\_ruby\_literal</code> that works:
 
     require 'date'
     require 'myrrha/with_core_ext'
     require 'myrrha/to_ruby_literal'
     
-    1.to_ruby_literal                       # => 1      
-    Date.today.to_ruby_literal              # => Marshal.load("...")
-    ["hello", Date.today].to_ruby_literal   # => ["hello", Marshal.load("...")]
+    1.to_ruby_literal                       # => "1"      
+    Date.today.to_ruby_literal              # => "Marshal.load('...')"
+    ["hello", Date.today].to_ruby_literal   # => "['hello', Marshal.load('...')]"
+
+Myrrha implements a best-effort strategy to return a human readable string. It
+simply fallbacks to <code>Marshal.load(...)</code> in case the strategy fails:
+
+    (1..10).to_ruby_literal                 # => "1..10"
+    
+    today = Date.today
+    (today..today+1).to_ruby_literal        # => "Marshal.load('...')"
 
 ### No core extension? No problem!
 
@@ -100,3 +112,7 @@ that works:
     Myrrha.to_ruby_literal(Date.today)     # => Marshal.load("...")
     # [... and so on ...]
     
+### Limitation
+
+As the feature fallbacks to marshaling, everything which is is marshalable will
+work. It means that, as usual, <code>to\_ruby\_literal(Proc)</code> won't work. 

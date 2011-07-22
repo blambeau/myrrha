@@ -8,4 +8,11 @@ describe "Ruby assumptions" do
     }
   end
   
+  class Object
+    def no_such_myrrha_method
+    end
+  end if false
+  
+  specify{ Object.should_not respond_to(:no_such_myrrha_method) }
+  
 end
