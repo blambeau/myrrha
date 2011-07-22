@@ -37,6 +37,7 @@ module Myrrha
       @upons = upons
       @rules = rules
       @fallbacks = fallbacks
+      @appender = :<<
       yield(self) if block_given?
     end
     
@@ -78,7 +79,7 @@ module Myrrha
     # @return self
     #
     def upon(source, converter = nil, &convproc)
-      @upons << [source, nil, converter || convproc]
+      @upons.send(@appender, [source, nil, converter || convproc])
       self
     end
     
@@ -111,7 +112,7 @@ module Myrrha
     # @return self
     #
     def coercion(source, target, converter = nil, &convproc)
-      @rules << [source, target, converter || convproc]
+      @rules.send(@appender, [source, target, converter || convproc])
       self
     end
     
@@ -135,7 +136,7 @@ module Myrrha
     # @return self
     #
     def fallback(source, converter = nil, &convproc)
-      @fallbacks << [source, nil, converter || convproc]
+      @fallbacks.send(@appender, [source, nil, converter || convproc])
       self
     end
     
