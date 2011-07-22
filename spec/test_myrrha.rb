@@ -24,6 +24,15 @@ describe Myrrha do
     }.should raise_error(Myrrha::Error, /^Unable to coerce `12.2` to Integer \(invalid value /)
   end
   
+  it "should support upon rules" do
+    rules = Myrrha.coercions do |g|
+      g.coercion(Integer, Symbol){|s,t| :coercion} 
+      g.upon(lambda{|s| s<0}){|s,t| :upon}
+    end
+    rules.coerce(12, Symbol).should eq(:coercion)
+    rules.coerce(-12, Symbol).should eq(:upon)
+  end
+  
   it "should support fallback rules" do
     rules = Myrrha.coercions do |g|
       g.fallback String, lambda{|s,t| :world}

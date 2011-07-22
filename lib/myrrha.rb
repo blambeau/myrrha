@@ -33,7 +33,8 @@ module Myrrha
     #
     # Creates an empty list of coercion rules
     #
-    def initialize(rules = [], fallbacks = [])
+    def initialize(upons = [], rules = [], fallbacks = [])
+      @upons = upons
       @rules = rules
       @fallbacks = fallbacks
       yield(self) if block_given?
@@ -55,6 +56,29 @@ module Myrrha
     #
     def append
       yield(self) if block_given?
+      self
+    end
+    
+    #
+    # Adds an upon rule for a source domain.
+    #
+    # Example:
+    #
+    #   Myrrha.coercions do |r|
+    #
+    #     # Don't even try something else on nil
+    #     r.upon(NilClass){|s,t| nil}
+    #     [...]
+    #
+    #   end
+    #
+    # @param source [Domain] a source domain (mimic Domain) 
+    # @param converter [Converter] an optional converter (mimic Converter)
+    # @param convproc [Proc] used when converter is not specified
+    # @return self
+    #
+    def upon(source, converter = nil, &convproc)
+      @upons << [source, nil, converter || convproc]
       self
     end
     
@@ -94,16 +118,14 @@ module Myrrha
     #
     # Adds a fallback rule for a source domain.
     #
-    # Conventions about converters are exactly the same as with coercion.
-    #
     # Example:
     #
     #   Myrrha.coercions do |r|
     #     
-    #     # With an explicit proc 
-    #     r.fallback String, lambda{|v,t| 
+    #     # Add a 'last chance' rule for Strings
+    #     r.fallback(String) do |v,t| 
     #       # the user wants _v_ to be converted to a value of domain _t_
-    #     }
+    #     end
     #
     #   end
     #
@@ -114,6 +136,7 @@ module Myrrha
     #
     def fallback(source, converter = nil, &convproc)
       @fallbacks << [source, nil, converter || convproc]
+      self
     end
     
     #
@@ -130,7 +153,7 @@ module Myrrha
     def coerce(value, target_domain)
       return value if belongs_to?(value, target_domain)
       error = nil
-      (@rules + @fallbacks).each do |from,to,converter|
+      (@upons + @rules + @fallbacks).each do |from,to,converter|
         next unless from.nil? or belongs_to?(value, from)
         next unless to.nil?   or subdomain?(to, target_domain)
         begin
@@ -185,7 +208,7 @@ module Myrrha
     # @return [Coercions] a copy of this set of rules
     # 
     def dup
-      Coercions.new(@rules.dup, @fallbacks.dup)
+      Coercions.new(@upons.dup, @rules.dup, @fallbacks.dup)
     end
     
     private
@@ -250,6 +273,11 @@ module Myrrha
   # Defines basic coercions for Ruby, mostly from String 
   CoerceRules = coercions do |g|
     
+    # NilClass should return immediately
+    g.upon(NilClass) do |s,t| 
+      nil
+    end
+    
     # Specific basic rules
     g.coercion String, Integer, lambda{|s,t| Integer(s)        }
     g.coercion String,   Float, lambda{|s,t| Float(s)          }
@@ -257,7 +285,6 @@ module Myrrha
     g.coercion Integer,  Float, lambda{|s,t| Float(s)          }
     g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
     g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
-    g.fallback NilClass,        lambda{|s,t| nil               }
       
     # By default, we try to invoke :parse on the class 
     g.fallback(String) do |s,t| 
