@@ -44,20 +44,44 @@ module Myrrha
     #
     # Appends the list of rules with new ones.
     #
-    # New coercion and fallback rules will be put after the already existing 
-    # ones, in both case. However, coercion rules always stay before fallback
-    # ones.    
+    # New upon, coercion and fallback rules will be put after the already 
+    # existing ones, in each case.  
     #
     # Example:
     #
     #   rules = Myrrha.coercions do ... end
     #   rules.append do |r|
+    #
+    #     # [previous coercion rules would come here]
+    #
+    #     # install new rules
     #     r.coercion String, Float, lambda{|v,t| Float(t)}
     #   end
     #
-    def append
-      yield(self) if block_given?
-      self
+    def append(&proc)
+      extend_rules(:<<, proc)
+    end
+    
+    #
+    # Prepends the list of rules with new ones.
+    #
+    # New upon, coercion and fallback rules will be put before the already 
+    # existing ones, in each case.  
+    #
+    # Example:
+    #
+    #   rules = Myrrha.coercions do ... end
+    #   rules.prepend do |r|
+    #
+    #     # install new rules
+    #     r.coercion String, Float, lambda{|v,t| Float(t)}
+    #
+    #     # [previous coercion rules would come here]
+    #
+    #   end
+    #
+    def prepend(&proc)
+      extend_rules(:unshift, proc)
     end
     
     #
@@ -220,6 +244,13 @@ module Myrrha
     end
     
     private
+    
+    # Extends existing rules
+    def extend_rules(appender, block)
+      @appender = appender
+      block.call(self)
+      self
+    end
     
     #
     # Yields each rule in turn (upons, coercions then fallbacks)

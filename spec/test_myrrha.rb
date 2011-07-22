@@ -65,11 +65,23 @@ describe Myrrha do
     end
     rules.coerce("hello", Symbol).should eq(:hello)
     rules.coerce(12, Symbol).should eq(:fallback)
+    
     rules.append do |c|
       c.coercion Integer, Symbol, lambda{|s,t| s.to_s.to_sym} 
     end
     rules.coerce(12, Symbol).should eq(:"12")
     rules.coerce(true, Symbol).should eq(:fallback)
+  end
+  
+  it "should support adding rules before" do
+    rules = Myrrha.coercions do |c|
+      c.coercion String, Symbol, lambda{|s,t| s.to_sym}
+    end
+    rules.coerce("hello", Symbol).should eq(:hello)
+    rules.prepend do |c|
+      c.coercion String, Symbol, lambda{|s,t| s.to_s.upcase.to_sym}
+    end
+    rules.coerce("hello", Symbol).should eq(:HELLO)
   end
   
 end
