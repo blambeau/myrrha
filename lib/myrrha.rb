@@ -153,7 +153,7 @@ module Myrrha
     def coerce(value, target_domain)
       return value if belongs_to?(value, target_domain)
       error = nil
-      (@upons + @rules + @fallbacks).each do |from,to,converter|
+      each_rule do |from,to,converter|
         next unless from.nil? or belongs_to?(value, from)
         next unless to.nil?   or subdomain?(to, target_domain)
         begin
@@ -212,6 +212,15 @@ module Myrrha
     end
     
     private
+    
+    #
+    # Yields each rule in turn (upons, coercions then fallbacks)
+    #
+    def each_rule(&proc)
+      @upons.each(&proc)
+      @rules.each(&proc)
+      @fallbacks.each(&proc)
+    end
     
     #
     # Calls converter on a (value,target_domain) pair.
