@@ -213,11 +213,13 @@ module Myrrha
           domain.call(value, target_domain)
         elsif RUBY_VERSION < "1.9"
           domain.call(value)
-        else
+        elsif domain
           domain === value
         end
-      else
-        domain === value
+      else 
+        domain.respond_to?(:===) ? 
+          domain === value :
+          false
       end
     end
     

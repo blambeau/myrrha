@@ -1,6 +1,19 @@
 # Myrrha
 
+## Description
+
 Myrrha provides the coercion framework which is missing to Ruby, IMHO. 
+
+### Install
+
+    % [sudo] gem install myrrha
+
+### Bundler & Require 
+
+    # Bug fixes (tiny) do not even add new default rules to coerce 
+    # and to_ruby_literal. Minor version can, which could break your
+    # code. So please use:
+    gem "alf", "~> 0.1.0"
 
 ## Links
 
@@ -226,3 +239,95 @@ And building your own set of rules is possible as well:
 
 As the feature fallbacks to marshaling, everything which is marshalable will
 work. As usual, <code>to\_ruby\_literal(Proc)</code> won't work. 
+
+## The general coercion framework
+
+A set of coercion rules can simply be created from scratch as follows:
+
+    Rules = Myrrha.coercions do |r|
+    
+      # `upon` rules are tried in priority if PRE holds
+      r.upon(SourceDomain) do |value, requested_domain|
+     
+        # PRE: - user wants to coerce `value` to a requested_domain
+        #      - belongs_to?(value, SourceDomain)
+        
+        # implement the coercion or throw(:newrule)
+        returned_value = something(value)
+        
+        # POST: belongs_to?(returned_value, requested_domain)
+        
+      end
+      
+      # `coercion` rules are then tried in order if PRE holds
+      r.coercion(SourceDomain, TargetDomain) do |value, requested_domain|
+     
+        # PRE: - user wants to coerce `value` to a requested_domain
+        #      - belongs_to?(value, SourceDomain)
+        #      - subdomain?(TargetDomain, requested_domain)
+        
+        # implement the coercion or throw(:newrule)
+        returned_value = something(value) 
+        
+        # POST: returned_value belongs to requested_domain
+        
+      end
+      
+      # fallback rules are tried if everything else has failed
+      r.fallback(SourceDomain) do |value, requested_domain|
+      
+        # exactly the same as upon rules
+      
+      end
+    
+    end
+    
+When the user invokes <code>Rules.apply(value, domain)</code> all rules for 
+which PRE holds are executed in order, until one succeed (chain of 
+responsibility design pattern). This means that coercions always execute in 
+<code>O(number of rules)</code>.
+
+### <code>belongs\_to?</code> and <code>subdomain?</code> 
+
+The pseudo-code given above relies on two main abstractions. Suppose the user 
+makes a call to <code>coerce(value, requested_domain)</code>:
+
+* <code>belongs\_to?(value, SourceDomain)</code> is true iif
+  * <code>SourceDomain</code> is a <code>Proc</code> of arity 2, and 
+    <code>SourceDomain.call(value, requested_domain)</code> yields true
+  * <code>SourceDomain</code> is a <code>Proc</code> of arity 1, and 
+    <code>SourceDomain.call(value)</code> yields true
+  * <code>SourceDomain === value</code> yields true
+
+* <code>subdomain?(SourceDomain,TargetDomain)</code> is true iif
+  * <code>SourceDomain == TargetDomain</code> yields true
+  * SourceDomain and TargetDomain are both classes and the latter is a super 
+    class of the former 
+    
+### Advanced rule examples
+
+    Rules = Myrrha.coercions do |r|
+    
+      # A 'catch-all' upon rule, always fired
+      catch_all = lambda{|v,rd| true} 
+      r.upon(catch_all) do |value, requested_domain|
+        if you_can_coerce?(value)
+          # then do it!
+        else
+          throw(:next_rule)
+        end
+      end
+      
+      # Delegate every call to the requested domain if it responds to compile
+      compilable = lambda{|v,rd| rd.respond_to?(:compile)} 
+      r.upon(compilable) do |value, requested_domain|
+        requested_domain.compile(value)
+      end  
+      
+      # A fallback strategy if everything else fails
+      r.fallback(Object) do |value, requested_domain|
+        # always fired after everything else
+        # this is your last change, an Myrrha::Error will be raised if you fail
+      end
+      
+    end    
