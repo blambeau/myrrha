@@ -6,7 +6,7 @@ class Foo
   end
 end
 
-Myrrha::CoerceRules.append do |r|
+Myrrha::Coerce.append do |r|
   r.coercion(Symbol, Foo) do |value, _|
     Foo.new(value)
   end

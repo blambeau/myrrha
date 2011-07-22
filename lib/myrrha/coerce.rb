@@ -46,7 +46,7 @@ module Myrrha
   end
   
   # Defines basic coercions for Ruby, mostly from String 
-  CoerceRules = coercions do |g|
+  Coerce = coercions do |g|
     
     # NilClass should return immediately
     g.upon(NilClass) do |s,t| 
@@ -71,10 +71,10 @@ module Myrrha
       t.respond_to?(:parse) ? t.parse(s.to_str) : throw(:nextrule) 
     end
     
-  end # CoerceRules
+  end # Coerce
 
   def self.coerce(value, domain)
-    CoerceRules.coerce(value, domain)
+    Coerce.apply(value, domain)
   end
     
 end # module Myrrha

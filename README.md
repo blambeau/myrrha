@@ -91,7 +91,7 @@ If <code>Foo</code> is not your code and you don't want to make core extensions
 by adding a <code>coerce</code> class method, you can simply add new rules to 
 Myrrha itself:
 
-    Myrrha::CoerceRules.append do |r|
+    Myrrha::Coerce.append do |r|
       r.coercion(Symbol, Foo) do |value, _|
         Foo.new(value)
       end
@@ -103,16 +103,17 @@ Myrrha itself:
 Now, doing so, the new coercion rule will be shared with all Myrrha users, which 
 might be intrusive. Why not using your own set of coercion rules?
 
-    MyRules = Myrrha::CoerceRules.dup.append do |r|
+    MyRules = Myrrha::Coerce.dup.append do |r|
       r.coercion(Symbol, Foo) do |value, _|
         Foo.new(value)
       end
     end 
     
-    Myrrha.coerce(:hello, Foo)
+    # Myrrha.coerce is actually a shortcut for:
+    Myrrha::Coerce.apply(:hello, Foo)
     # => Myrrha::Error: Unable to coerce `hello` to Foo
     
-    MyRules.coerce(:hello, Foo) 
+    MyRules.apply(:hello, Foo) 
     # =>  #<Foo:0x8b7d254 @arg=:hello>
 
 ## The missing <code>to\_ruby\_literal()</code>

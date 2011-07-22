@@ -193,6 +193,7 @@ module Myrrha
       msg += " (#{error})" if error
       raise Error, msg
     end
+    alias :apply :coerce
     
     #
     # Returns true if `value` can be considered as a valid element of the 
