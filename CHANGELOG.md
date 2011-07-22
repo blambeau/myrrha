@@ -1,4 +1,4 @@
-# 0.0.1 / FIX ME
+# 1.0.0 / FIX ME
 
 * Enhancements
 

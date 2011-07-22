@@ -14,10 +14,10 @@ a numeric, a boolean, a date, a time, an URI, and so on.
 
 ### Bundler & Require 
 
-    # Bug fixes (tiny) do not even add new default rules to coerce 
-    # and to_ruby_literal. Minor version can, which could break your
-    # code. So please use:
-    gem "alf", "~> 0.1.0"
+    # Bug fixes (tiny) do not even add new default rules to coerce and 
+    # to\_ruby\_literal. Minor version can, which could break your code. 
+    # Therefore, please always use:
+    gem "alf", "~> 1.0.0"
 
 ## Links
 

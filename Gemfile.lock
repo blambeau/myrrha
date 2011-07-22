@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    myrrha (0.0.1)
+    myrrha (1.0.0)
 
 GEM
   remote: http://rubygems.org/
