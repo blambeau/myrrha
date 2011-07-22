@@ -8,6 +8,7 @@ module Myrrha
   
   # Defines basic coercions for implementing to_ruby_literal
   ToRubyLiteral = coercions do |r|
+    r.main_target_domain = :to_ruby_literal
     
     r.upon(Object) do |s,t|
       s.to_ruby_literal{ throw :nextrule }
@@ -15,26 +16,26 @@ module Myrrha
     
     # On safe .inspect 
     safe = lambda{|x| TO_RUBY_THROUGH_INSPECT.include?(x.class)}
-    r.coercion(safe, :to_ruby_literal) do |s,t| 
+    r.coercion(safe) do |s,t| 
       s.inspect
     end
     
     # Best-effort on Range or let it be marshalled
-    r.coercion(Range, :to_ruby_literal) do |s,t|
+    r.coercion(Range) do |s,t|
       (TO_RUBY_THROUGH_INSPECT.include?(s.first.class) &&
        TO_RUBY_THROUGH_INSPECT.include?(s.last.class)) ?
         s.inspect : throw(:nextrule)
     end
     
     # Be friendly on array
-    r.coercion(Array, :to_ruby_literal) do |s,t|
-      "[" + s.collect{|v| r.coerce(v, :to_ruby_literal)}.join(', ') + "]"
+    r.coercion(Array) do |s,t|
+      "[" + s.collect{|v| r.apply(v)}.join(', ') + "]"
     end
     
     # As well as on Hash
-    r.coercion(Hash, :to_ruby_literal) do |s,t|
+    r.coercion(Hash) do |s,t|
       "{" + s.collect{|k,v| 
-        r.coerce(k, :to_ruby_literal) + " => " + r.coerce(v, :to_ruby_literal) 
+        r.apply(k) + " => " + r.apply(v) 
       }.join(', ') + "}"
     end
     
@@ -55,7 +56,7 @@ module Myrrha
   def self.to_ruby_literal(value = self)
     block_given? ? 
       yield : 
-      ToRubyLiteral.coerce(value, :to_ruby_literal)
+      ToRubyLiteral.apply(value)
   end
   
 end # module Myrrha

@@ -199,7 +199,7 @@ class
 As with coerce, contributing your own rule to Myrrha is possible:
 
     Myrrha::ToRubyLiteral.append do |r|
-      r.coercion(Foo, :to_ruby_literal) do |foo, _|
+      r.coercion(Foo) do |foo, _|
         "Foo.new(#{foo.arg.inspect})"
       end
     end
@@ -210,16 +210,16 @@ As with coerce, contributing your own rule to Myrrha is possible:
 And building your own set of rules is possible as well:
 
     MyRules = Myrrha::ToRubyLiteral.dup.append do |r|
-      r.coercion(Foo, :to_ruby_literal) do |foo, _|
+      r.coercion(Foo) do |foo, _|
         "Foo.new(#{foo.arg.inspect})"
       end
     end
 
     # Myrrha.to_ruby_literal is actually a shortcut for:
-    Myrrha::ToRubyLiteral.apply(Foo.new(:hello), :to_ruby_literal)
+    Myrrha::ToRubyLiteral.apply(Foo.new(:hello))
     # => "Marshal.load('...')"
     
-    MyRules.apply(Foo.new(:hello), :to_ruby_literal)
+    MyRules.apply(Foo.new(:hello))
     # => "Foo.new(:hello)" 
     
 ### Limitation

@@ -30,6 +30,9 @@ module Myrrha
   #
   class Coercions
     
+    # @return [Domain] The main target domain, if any
+    attr_accessor :main_target_domain
+    
     #
     # Creates an empty list of coercion rules
     #
@@ -135,7 +138,7 @@ module Myrrha
     # @param convproc [Proc] used when converter is not specified
     # @return self
     #
-    def coercion(source, target, converter = nil, &convproc)
+    def coercion(source, target = main_target_domain, converter = nil, &convproc)
       @rules.send(@appender, [source, target, converter || convproc])
       self
     end
@@ -175,7 +178,7 @@ module Myrrha
     # @param [Domain] target_domain a target domain to convert to (mimic Domain)
     # @return self
     #
-    def coerce(value, target_domain)
+    def coerce(value, target_domain = main_target_domain)
       return value if belongs_to?(value, target_domain)
       error = nil
       each_rule do |from,to,converter|
