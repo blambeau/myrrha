@@ -83,7 +83,7 @@ if Myrrha.core_ext?
   def Boolean(s)
     Myrrha::Boolean(s)
   end
-  def coercion(value, domain)
+  def coerce(value, domain)
     Myrrha.coerce(value, domain)
   end 
 end

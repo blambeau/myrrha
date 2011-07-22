@@ -10,7 +10,8 @@ Myrrha provides the coercion framework which is missing to Ruby.
 
 ### The missing coercion() feature
 
-    require 'myrrha/core_ext'
+    require 'myrrha/with_core_ext'
+    require 'myrrha/coerce'
     
     # it works on numerics
     coercion("12", Integer)             # => 12
@@ -35,9 +36,10 @@ Myrrha provides the coercion framework which is missing to Ruby.
 
 ### The missing to_ruby_literal() feature
 
-Myrrha also implements Object#to_ruby_literal, which has a very simple 
-specification. Given an object o that can be considered as a true _value_, the 
-result of o.to_ruby_literal must be such that the following invariant holds:
+Myrrha also implements <code>Object#to_ruby_literal</code>, which has a very 
+simple specification. Given an object o that can be considered as a true 
+_value_, the result of o.to_ruby_literal must be such that the following 
+invariant holds:
 
     Kernel.eval(o.to_ruby_literal) == o 
 
@@ -56,7 +58,8 @@ Unfortunately, this is not always the case:
 Myrrha implements a very simple set of rules for implementing to_ruby_literal
 that works:
 
-    require 'myrrha/core_ext'
+    require 'myrrha/with_core_ext'
+    require 'myrrha/to_ruby_literal'
     
     1.to_ruby_literal                       # => 1      
     Date.today.to_ruby_literal              # => Marshal.load("...")
