@@ -7,7 +7,7 @@ class Foo
   end
 end
 
-Myrrha::ToRubyLiteralRules.append do |r|
+Myrrha::ToRubyLiteral.append do |r|
   r.coercion(Foo, :to_ruby_literal) do |foo, _|
     "Foo.new(#{foo.arg.inspect})"
   end

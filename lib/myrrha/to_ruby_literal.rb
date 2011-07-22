@@ -7,7 +7,7 @@ module Myrrha
                               String, Symbol, Class, Module, Regexp ]
   
   # Defines basic coercions for implementing to_ruby_literal
-  ToRubyLiteralRules = coercions do |r|
+  ToRubyLiteral = coercions do |r|
     
     r.upon(Object) do |s,t|
       s.to_ruby_literal{ throw :nextrule }
@@ -55,7 +55,7 @@ module Myrrha
   def self.to_ruby_literal(value = self)
     block_given? ? 
       yield : 
-      ToRubyLiteralRules.coerce(value, :to_ruby_literal)
+      ToRubyLiteral.coerce(value, :to_ruby_literal)
   end
   
 end # module Myrrha
