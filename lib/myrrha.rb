@@ -112,7 +112,7 @@ module Myrrha
     # @return self
     #
     def fallback(source, converter = nil, &convproc)
-      @fallbacks << [source, converter || convproc]
+      @fallbacks << [source, nil, converter || convproc]
     end
     
     #
@@ -129,17 +129,9 @@ module Myrrha
     def coerce(value, target_domain)
       return value if belongs_to?(value, target_domain)
       error = nil
-      @rules.each do |from,to,converter|
-        next unless belongs_to?(value, from)
-        next unless subdomain?(to, target_domain)
-        begin
-          return convert(value, target_domain, converter)
-        rescue => ex
-          error = ex.message unless error
-        end
-      end
-      @fallbacks.each do |from,converter|
-        next unless belongs_to?(value, from)
+      (@rules + @fallbacks).each do |from,to,converter|
+        next unless from.nil? or belongs_to?(value, from)
+        next unless to.nil?   or subdomain?(to, target_domain)
         begin
           return convert(value, target_domain, converter)
         rescue => ex
