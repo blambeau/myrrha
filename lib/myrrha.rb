@@ -280,6 +280,7 @@ module Myrrha
     g.coercion Integer,  Float, lambda{|s,t| Float(s)          }
     g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
     g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
+    g.fallback NilClass,        lambda{|s,t| nil               }
     g.fallback String,          lambda{|s,t| Parse(s,t)        }
   end
   

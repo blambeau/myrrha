@@ -1,6 +1,13 @@
 require 'spec_helper'
 describe "::Ruby's coercion " do
   
+  describe "from NilClass" do
+    it "should always return nil" do
+      coercion(nil, Integer).should be_nil
+      coercion(nil, Date).should be_nil
+    end
+  end
+  
   describe "to Integer" do
     specify "from Integer" do
       coercion(12,     Integer).should eq(12)
