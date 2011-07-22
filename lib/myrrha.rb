@@ -273,133 +273,16 @@ module Myrrha
     end
     
   end # class Coercions
-  
-  #
-  # Defines the missing Boolean type.
-  #
-  # This module mimics a Ruby missing Boolean type. 
-  #
-  module Boolean
-
-    #
-    # Returns Object, as the superclass of Boolean
-    #
-    # @return [Class] Object
-    #
-    def self.superclass; Object; end
-      
-    #
-    # Returns true if `val` is <code>true</code> or <code>false</code>, false 
-    # otherwise.
-    #
-    def self.===(val)
-      (val == true) || (val == false)
-    end
     
-  end # module Boolean
+  # Myrrha main options
+  OPTIONS = {
+    :core_ext => false
+  }
   
-  #
-  # Coerces _s_ to a Boolean
-  #
-  # This method mimics Ruby's Integer(), Float(), etc. for Boolean values.
-  #
-  # @param [Object] s a Boolean or a String 
-  # @return [Boolean] true if `s` is already true of the string 'true',
-  #                   false if `s` is already false of the string 'false'.
-  # @raise [ArgumentError] if `s` cannot be coerced to a boolean. 
-  #
-  def self.Boolean(s)
-    if (s==true || s.to_str.strip == "true")
-      true
-    elsif (s==false || s.to_str.strip == "false")
-      false
-    else
-      raise ArgumentError, "invalid value for Boolean: \"#{s}\""
-    end
+  # Install core extensions?
+  def self.core_ext?
+    OPTIONS[:core_ext]
   end
-  
-  # Defines basic coercions for Ruby, mostly from String 
-  CoerceRules = coercions do |g|
-    
-    # NilClass should return immediately
-    g.upon(NilClass) do |s,t| 
-      nil
-    end
-    
-    # Use t.coerce if it exists
-    g.upon(lambda{|s,t| t.respond_to?(:coerce)}) do |s,t|
-      t.coerce(s)
-    end
-    
-    # Specific basic rules
-    g.coercion String, Integer, lambda{|s,t| Integer(s)        }
-    g.coercion String,   Float, lambda{|s,t| Float(s)          }
-    g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
-    g.coercion Integer,  Float, lambda{|s,t| Float(s)          }
-    g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
-    g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
-      
-    # By default, we try to invoke :parse on the class 
-    g.fallback(String) do |s,t| 
-      t.respond_to?(:parse) ? t.parse(s.to_str) : throw(:nextrule) 
-    end
-    
-  end # CoerceRules
-  
-  # These are all classes for which using inspect is safe for to_ruby_literal
-  TO_RUBY_THROUGH_INSPECT = [ NilClass, TrueClass, FalseClass, 
-                              Fixnum, Bignum, Float, 
-                              String, Symbol, Class, Module, Regexp ]
-  
-  # Defines basic coercions for implementing to_ruby_literal
-  ToRubyLiteralRules = coercions do |r|
-    safe = lambda{|x| TO_RUBY_THROUGH_INSPECT.include?(x.class)}
-    r.coercion(safe, :to_ruby_literal) do |s,t| 
-      s.inspect
-    end
-    r.coercion(Range, :to_ruby_literal) do |s,t|
-      (TO_RUBY_THROUGH_INSPECT.include?(s.first.class) &&
-       TO_RUBY_THROUGH_INSPECT.include?(s.last.class)) ?
-        s.inspect : throw(:nextrule)
-    end
-    r.coercion(Array, :to_ruby_literal) do |s,t|
-      "[" + s.collect{|v| r.coerce(v, :to_ruby_literal)}.join(', ') + "]"
-    end
-    r.coercion(Hash, :to_ruby_literal) do |s,t|
-      "{" + s.collect{|k,v| 
-        r.coerce(k, :to_ruby_literal) + " => " + r.coerce(v, :to_ruby_literal) 
-      }.join(', ') + "}"
-    end
-    r.fallback(Object) do |s,t| 
-      "Marshal.load(#{Marshal.dump(s).inspect})"
-    end
-  end
-  
-  # Encapsulates core extensions to the Object class
-  module CoreExt
-    
-    # 
-    # Coerces _value_ to an instance of _domain_
-    #
-    def coercion(value, clazz)
-      CoerceRules.coerce(value, clazz)
-    end
-    
-    #
-    # Converts this value to a ruby literal
-    #
-    def to_ruby_literal
-      ToRubyLiteralRules.coerce(self, :to_ruby_literal)
-    end
-    
-    # (see Myrrha.Boolean)
-    def Boolean(s)
-      Myrrha.Boolean(s)
-    end
-    
-    Boolean = Myrrha::Boolean
-  end # module CoreExt
-  include CoreExt
   
 end # module Myrrha
 require "myrrha/version"

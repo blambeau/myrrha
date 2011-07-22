@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'myrrha'
 require 'myrrha/core_ext'
+require 'myrrha/coerce'
+require 'myrrha/to_ruby_literal'
 require 'date'
 require 'time'
 require 'shared/a_value'

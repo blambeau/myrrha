@@ -1,2 +1,2 @@
 require 'myrrha'
-include(Myrrha::CoreExt)
+Myrrha::OPTIONS[:core_ext] = true
