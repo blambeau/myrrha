@@ -134,7 +134,9 @@ module Myrrha
         next unless from.nil? or belongs_to?(value, from)
         next unless to.nil?   or subdomain?(to, target_domain)
         begin
-          return convert(value, target_domain, converter)
+          catch(:nextrule){
+            return convert(value, target_domain, converter)
+          }
         rescue => ex
           error = ex.message unless error
         end
@@ -259,9 +261,7 @@ module Myrrha
       
     # By default, we try to invoke :parse on the class 
     g.fallback(String) do |s,t| 
-      t.respond_to?(:parse) ? 
-        t.parse(s.to_str) : 
-        raise(ArgumentError, "#{t} does not parse")
+      t.respond_to?(:parse) ? t.parse(s.to_str) : throw(:nextrule) 
     end
     
   end # CoerceRules
@@ -278,12 +278,9 @@ module Myrrha
       s.inspect
     end
     r.coercion(Range, :to_ruby_literal) do |s,t|
-      if TO_RUBY_THROUGH_INSPECT.include?(s.first.class) &&
-         TO_RUBY_THROUGH_INSPECT.include?(s.last.class)
-        s.inspect
-      else
-        raise ArgumentError
-      end
+      (TO_RUBY_THROUGH_INSPECT.include?(s.first.class) &&
+       TO_RUBY_THROUGH_INSPECT.include?(s.last.class)) ?
+        s.inspect : throw(:nextrule)
     end
     r.coercion(Array, :to_ruby_literal) do |s,t|
       "[" + s.collect{|v| r.coerce(v, :to_ruby_literal)}.join(', ') + "]"

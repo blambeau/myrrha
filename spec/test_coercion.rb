@@ -102,5 +102,9 @@ describe "::Ruby's coercion " do
       coercion("http://www.google.com/", URI).should eql(URI.parse("http://www.google.com/"))
     end
   end
+  
+  specify "otherwise" do
+    lambda{ coercion("hallo", Myrrha) }.should raise_error(Myrrha::Error)
+  end
 
 end
