@@ -13,6 +13,24 @@ Myrrha provides the coercion framework which is missing to Ruby, IMHO.
     Myrrha.coerce(:anything, Domain)
     coerce(:anything, Domain)                    # with core extensions
 
+### What for?
+
+Having a single entry point for coercing values from one data-type (typically
+a String) to another one is very useful. Unfortunately, Ruby does not provide
+such a unique entry point... Thanks to Myrrah, the following scenario is 
+possible and even straightforward:
+
+    require 'myrrha/with_core_ext'
+    require 'myrrha/coerce'
+    require 'date'
+    
+    values = ["12", "true", "2011-07-20"]
+    types  = [Integer, Boolean, Date]
+    values.zip(types).collect do |value,domain|
+      coerce(value, domain)
+    end
+    # => [12, true, #<Date: 2011-07-20 (...)>]
+
 ### Example
 
     require 'myrrha/with_core_ext'
@@ -66,11 +84,16 @@ holds:
 
     Kernel.eval(o.to_ruby_literal) == o 
 
-That is, parsing & evaluating the literal yields the same value. For almost all 
-ruby classes, but not all, using o.inspect respects the invariant. For example, 
-the following is true:
+That is, parsing & evaluating the literal yields the same value. When generating 
+(human-readable) ruby code, having a unique entry point that respects the 
+specification is very useful. 
+
+For almost all ruby classes, but not all, using o.inspect respects the 
+invariant. For example, the following is true:
  
-    Kernel.eval("hello".inspect) == "hello"
+    Kernel.eval("hello".inspect)           == "hello"            # => true
+    Kernel.eval([1, 2, 3].inspect)         == [1, 2, 3]          # => true
+    Kernel.eval({:key => :value}.inspect)  == {:key => :value}   # => true
     # => true
 
 Unfortunately, this is not always the case:
@@ -78,9 +101,6 @@ Unfortunately, this is not always the case:
     Kernel.eval(Date.today.inspect) == Date.today
     # => false 
     # => because Date.today.inspect yields "#<Date: 2011-07-20 ...", which is a comment
-
-When generating (human-readable) ruby code, having a unique entry point that 
-respects the specification is very useful. 
 
 ### Example
 
@@ -96,7 +116,7 @@ Myrrha implements a very simple set of rules for implementing
     ["hello", Date.today].to_ruby_literal   # => "['hello', Marshal.load('...')]"
 
 Myrrha implements a best-effort strategy to return a human readable string. It
-simply fallbacks to <code>Marshal.load(...)</code> in case the strategy fails:
+simply fallbacks to <code>Marshal.load(...)</code> when the strategy fails:
 
     (1..10).to_ruby_literal                 # => "1..10"
     
@@ -114,5 +134,5 @@ simply fallbacks to <code>Marshal.load(...)</code> in case the strategy fails:
     
 ### Limitation
 
-As the feature fallbacks to marshaling, everything which is is marshalable will
-work. It means that, as usual, <code>to\_ruby\_literal(Proc)</code> won't work. 
+As the feature fallbacks to marshaling, everything which is marshalable will
+work. As usual, <code>to\_ruby\_literal(Proc)</code> won't work. 
