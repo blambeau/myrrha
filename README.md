@@ -8,7 +8,12 @@ Myrrha provides the coercion framework which is missing to Ruby, IMHO.
 * http://github.com/blambeau/myrrha
 * http://rubygems.org/gems/myrrha
 
-## The missing coerce() feature
+## The missing <code>coerce()</code>
+
+    Myrrha.coerce(:anything, Domain)
+    coerce(:anything, Domain)                    # with core extensions
+
+### Example
 
     require 'myrrha/with_core_ext'
     require 'myrrha/coerce'
@@ -41,16 +46,23 @@ Myrrha provides the coercion framework which is missing to Ruby, IMHO.
 
     require 'myrrha/coerce'
     
-    Myrrha.coerce("12", Integer)     # => 12
+    Myrrha.coerce("12", Integer)            # => 12
+    Myrrha.coerce("12.0", Float)            # => 12.0
     
-    # and so on
+    Myrrha.coerce("true", Myrrha::Boolean)  # => true
+    # [... and so on ...]
 
-## The missing to_ruby_literal() feature
+## The missing <code>to\_ruby\_literal()</code>
 
-Myrrha also implements <code>Object#to_ruby_literal</code>, which has a very 
+    Myrrha.to_ruby_literal([:anything]) 
+    [:anything].to_ruby_literal                  # with core extensions
+
+### What for?
+
+Myrrha also implements <code>Object#to\_ruby\_literal</code>, which has a very 
 simple specification. Given an object o that can be considered as a true 
-_value_, the result of o.to_ruby_literal must be such that the following 
-invariant holds:
+_value_, the result of <code>o.to_ruby_literal</code> must be such that the 
+following invariant holds:
 
     Kernel.eval(o.to_ruby_literal) == o 
 
@@ -66,13 +78,25 @@ Unfortunately, this is not always the case:
     Kernel.eval(Date.today.inspect) == Date.today
     # => false (because Date.today.inspect yields "#<Date: 2011-07-20 ...")
 
-Myrrha implements a very simple set of rules for implementing to_ruby_literal
+### Example
+
+Myrrha implements a very simple set of rules for implementing to\_ruby\_literal
 that works:
 
+    require 'date'
     require 'myrrha/with_core_ext'
     require 'myrrha/to_ruby_literal'
     
     1.to_ruby_literal                       # => 1      
     Date.today.to_ruby_literal              # => Marshal.load("...")
     ["hello", Date.today].to_ruby_literal   # => ["hello", Marshal.load("...")]
+
+### No core extension? No problem!
+
+    require 'date'
+    require 'myrrha/to_ruby_literal'
+    
+    Myrrha.to_ruby_literal(1)              # => 1
+    Myrrha.to_ruby_literal(Date.today)     # => Marshal.load("...")
+    # [... and so on ...]
     
