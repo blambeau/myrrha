@@ -1,6 +1,6 @@
 # Myrrha
 
-Myrrha provides the coercion framework which is missing to Ruby. 
+Myrrha provides the coercion framework which is missing to Ruby, IMHO. 
 
 ## Links
 
@@ -8,33 +8,44 @@ Myrrha provides the coercion framework which is missing to Ruby.
 * http://github.com/blambeau/myrrha
 * http://rubygems.org/gems/myrrha
 
-### The missing coercion() feature
+## The missing coerce() feature
 
     require 'myrrha/with_core_ext'
     require 'myrrha/coerce'
     
     # it works on numerics
-    coercion("12", Integer)             # => 12
-    coercion("12.0", Float)             # => 12.0
+    coerce("12", Integer)             # => 12
+    coerce("12.0", Float)             # => 12.0
     
     # but also on regexp (through Regexp.compile)
-    coercion("[a-z]+", Regexp)          # => /[a-z]+/
+    coerce("[a-z]+", Regexp)          # => /[a-z]+/
     
-    # and, yes, on Boolean (Sorry Matz!)
-    coercion("true", Boolean)           # => true
-    coercion("false", Boolean)          # => false
+    # and, yes, on Boolean (sorry Matz!)
+    coerce("true", Boolean)           # => true
+    coerce("false", Boolean)          # => false
   
     # and on date and time (through Date/Time.parse)  
     require 'date'
     require 'time'
-    coercion("2011-07-20", Date)        # => #<Date: 2011-07-20 (4911525/2,0,2299161)>  
-    coercion("2011-07-20 10:57", Time)  # => 2011-07-20 10:57:00 +0200
+    coerce("2011-07-20", Date)        # => #<Date: 2011-07-20 (4911525/2,0,2299161)>  
+    coerce("2011-07-20 10:57", Time)  # => 2011-07-20 10:57:00 +0200
     
     # why not on URI?
     require 'uri'
-    coercion('http://google.com', URI)  # => #<URI::HTTP:0x8281ce0 URL:http://google.com>    
+    coerce('http://google.com', URI)  # => #<URI::HTTP:0x8281ce0 URL:http://google.com>    
 
-### The missing to_ruby_literal() feature
+    # on nil, it always returns nil
+    coerce(nil, Integer)              # => nil
+
+### No core extension? no problem!
+
+    require 'myrrha/coerce'
+    
+    Myrrha.coerce("12", Integer)     # => 12
+    
+    # and so on
+
+## The missing to_ruby_literal() feature
 
 Myrrha also implements <code>Object#to_ruby_literal</code>, which has a very 
 simple specification. Given an object o that can be considered as a true 
