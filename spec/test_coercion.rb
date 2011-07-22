@@ -103,6 +103,15 @@ describe "::Ruby's coercion " do
     end
   end
   
+  specify "to a class that respond to coerce" do
+    class Coerceable
+      def self.coerce(val)
+        [:coerced, val]
+      end
+    end
+    coercion("hello", Coerceable).should eq([:coerced, "hello"])
+  end
+  
   specify "otherwise" do
     lambda{ coercion("hallo", Myrrha) }.should raise_error(Myrrha::Error)
   end

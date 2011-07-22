@@ -287,6 +287,11 @@ module Myrrha
       nil
     end
     
+    # Use t.coerce if it exists
+    g.upon(Object) do |s,t|
+      t.respond_to?(:coerce) ? t.coerce(s) : throw(:nextrule)
+    end
+    
     # Specific basic rules
     g.coercion String, Integer, lambda{|s,t| Integer(s)        }
     g.coercion String,   Float, lambda{|s,t| Float(s)          }
