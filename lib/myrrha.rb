@@ -154,7 +154,7 @@ module Myrrha
       return value if belongs_to?(value, target_domain)
       error = nil
       each_rule do |from,to,converter|
-        next unless from.nil? or belongs_to?(value, from)
+        next unless from.nil? or belongs_to?(value, from, target_domain)
         next unless to.nil?   or subdomain?(to, target_domain)
         begin
           catch(:nextrule){
@@ -177,9 +177,16 @@ module Myrrha
     # @param [Domain] domain a domain (mimic Domain)
     # @return [Boolean] true if `value` belongs to `domain`, false otherwise
     #
-    def belongs_to?(value, domain)
-      if domain.is_a?(Proc) && (RUBY_VERSION < "1.9")
-        domain.call(value)
+    def belongs_to?(value, domain, target_domain = domain)
+      case domain
+      when Proc
+        if domain.arity == 2
+          domain.call(value, target_domain)
+        elsif RUBY_VERSION < "1.9"
+          domain.call(value)
+        else
+          domain === value
+        end
       else
         domain === value
       end
@@ -288,8 +295,8 @@ module Myrrha
     end
     
     # Use t.coerce if it exists
-    g.upon(Object) do |s,t|
-      t.respond_to?(:coerce) ? t.coerce(s) : throw(:nextrule)
+    g.upon(lambda{|s,t| t.respond_to?(:coerce)}) do |s,t|
+      t.coerce(s)
     end
     
     # Specific basic rules
