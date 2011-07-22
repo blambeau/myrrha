@@ -33,9 +33,9 @@ module Myrrha
     #
     # Creates an empty list of coercion rules
     #
-    def initialize
-      @rules = []
-      @fallbacks = []
+    def initialize(rules = [], fallbacks = [])
+      @rules = rules
+      @fallbacks = fallbacks
       yield(self) if block_given?
     end
     
@@ -174,6 +174,16 @@ module Myrrha
       (child.respond_to?(:superclass) && child.superclass) ? 
         subdomain?(child.superclass, parent) :
         false
+    end
+    
+    #
+    # Duplicates this set of rules in such a way that the original will not
+    # be affected by any change made to the copy.
+    #
+    # @return [Coercions] a copy of this set of rules
+    # 
+    def dup
+      Coercions.new(@rules.dup, @fallbacks.dup)
     end
     
     private

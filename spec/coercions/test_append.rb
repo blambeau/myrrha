@@ -7,6 +7,5 @@ module Myrrha
       rules.append{|r| }.should eq(rules)
     end
       
-
   end
 end
