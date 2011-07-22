@@ -1,3 +1,4 @@
+require 'myrrha'
 module Myrrha
 
   # These are all classes for which using inspect is safe for to_ruby_literal
