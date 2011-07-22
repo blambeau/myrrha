@@ -4,9 +4,9 @@ Myrrha provides the coercion framework which is missing to Ruby, IMHO.
 
 ## Links
 
-* http://rubydoc.info/github/blambeau/myrrha/master/frames
-* http://github.com/blambeau/myrrha
-* http://rubygems.org/gems/myrrha
+* http://rubydoc.info/github/blambeau/myrrha/master/frames (read this file there!)
+* http://github.com/blambeau/myrrha (source code)
+* http://rubygems.org/gems/myrrha (download)
 
 ## The missing <code>coerce()</code>
 
