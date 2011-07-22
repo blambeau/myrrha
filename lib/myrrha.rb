@@ -245,29 +245,10 @@ module Myrrha
     end
   end
   
-  #
-  # Tries to parse `s` thanks to the class `t`
-  #
-  # This method implements a typical fallback rule for coercing strings to
-  # other domains. It looks for a :parse method on `t` and uses it on `s`
-  # when found. Otherwise, it raises an ArgumentError.
-  #
-  # @param [String] s any String
-  # @param [Domain] t a domain (mimic Domain)
-  # @return [Object] the result of <code>t.parse(s.to_str)</code> if :parse is
-  #         defined.
-  # @raise [ArgumentError] is no such parse method is found.
-  #
-  def self.Parse(s,t)
-    if t.respond_to?(:parse)
-      t.parse(s.to_str)
-    else
-      raise ArgumentError, "#{t} does not parse"
-    end
-  end
-  
   # Defines basic coercions for Ruby, mostly from String 
   CoerceRules = coercions do |g|
+    
+    # Specific basic rules
     g.coercion String, Integer, lambda{|s,t| Integer(s)        }
     g.coercion String,   Float, lambda{|s,t| Float(s)          }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
@@ -275,8 +256,15 @@ module Myrrha
     g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
     g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
     g.fallback NilClass,        lambda{|s,t| nil               }
-    g.fallback String,          lambda{|s,t| Parse(s,t)        }
-  end
+      
+    # By default, we try to invoke :parse on the class 
+    g.fallback(String) do |s,t| 
+      t.respond_to?(:parse) ? 
+        t.parse(s.to_str) : 
+        raise(ArgumentError, "#{t} does not parse")
+    end
+    
+  end # CoerceRules
   
   # These are all classes for which using inspect is safe for to_ruby_literal
   TO_RUBY_THROUGH_INSPECT = [ NilClass, TrueClass, FalseClass, 
