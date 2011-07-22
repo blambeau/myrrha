@@ -287,13 +287,21 @@ module Myrrha
   # These are all classes for which using inspect is safe for to_ruby_literal
   TO_RUBY_THROUGH_INSPECT = [ NilClass, TrueClass, FalseClass, 
                               Fixnum, Bignum, Float, 
-                              String, Symbol, Class, Module, Regexp, Range ]
+                              String, Symbol, Class, Module, Regexp ]
   
   # Defines basic coercions for implementing to_ruby_literal
   ToRubyLiteralRules = coercions do |r|
     safe = lambda{|x| TO_RUBY_THROUGH_INSPECT.include?(x.class)}
     r.coercion(safe, :to_ruby_literal) do |s,t| 
       s.inspect
+    end
+    r.coercion(Range, :to_ruby_literal) do |s,t|
+      if TO_RUBY_THROUGH_INSPECT.include?(s.first.class) &&
+         TO_RUBY_THROUGH_INSPECT.include?(s.last.class)
+        s.inspect
+      else
+        raise ArgumentError
+      end
     end
     r.coercion(Array, :to_ruby_literal) do |s,t|
       "[" + s.collect{|v| r.coerce(v, :to_ruby_literal)}.join(', ') + "]"
