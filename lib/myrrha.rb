@@ -24,7 +24,66 @@ module Myrrha
   def self.coercions(&block)
     Coercions.new(&block)
   end
+  
+  # 
+  # Encapsulates the notion of abstract domain
+  #
+  class Domain
     
+    #
+    # Coerces a ruby Class to a Myrrha::Domain
+    # 
+    class ClassDomain < Domain
+      
+      # Coerced ruby class
+      attr_reader :clazz
+      
+      #
+      # Creates a ClassDomain instance
+      # 
+      def initialize(clazz)
+        @clazz = clazz
+      end
+      
+      #
+      # Returns this domain name
+      #
+      # @return [Symbol] the domain name
+      #
+      def name
+        clazz.name.to_sym
+      end
+      
+      #
+      # Returns true if <code>@clazz === value</code>, false otherwise
+      #
+      def belongs_to?(value)
+        @clazz === value
+      end
+      
+      #
+      # Checks if this domain is a sub domain of `domain`
+      #
+      # @return [Boolean] true if `domain` is a ClassDomain and its class
+      #         is a superclass of this domain class
+      #
+      def subdomain_of?(domain)
+        domain.is_a?(ClassDomain) && 
+        is_subclass?(self.clazz, domain.clazz) 
+      end
+      
+      private 
+      
+      # Checks if `child` is a subclass of `parent`
+      def is_subclass?(child, parent)
+        (child == parent) || 
+        (child.superclass && is_subclass?(child.superclass, parent))
+      end
+      
+    end # class ClassDomain
+    
+  end # class Domain
+  
   # 
   # Defines a set of coercion rules
   #
