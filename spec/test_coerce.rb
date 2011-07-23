@@ -111,6 +111,9 @@ describe "::Ruby's coercion " do
       coerce("::Myrrha::Version", Module).should eql(Myrrha::Version)
       coerce("Myrrha::Coercions", Module).should eql(Myrrha::Coercions)
     end
+    specify "from Symbol" do
+      coerce(:Kernel, Module).should eql(Kernel)
+    end
     it "should raise error if not a module" do
       lambda{
         coerce("Myrrha::VERSION", Module)
@@ -121,6 +124,9 @@ describe "::Ruby's coercion " do
   describe "to Class" do
     specify "from String" do
       coerce("Myrrha::Coercions", Class).should eql(Myrrha::Coercions)
+    end
+    specify "from Symbol" do
+      coerce(:Integer, Class).should eql(Integer)
     end
     it "should raise error if not a module" do
       lambda{
