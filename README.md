@@ -48,34 +48,69 @@ possible and even straightforward:
     end
     # => [12, true, #<Date: 2011-07-20 (...)>]
 
-### Example
+### Implemented coercions
+
+Implemented coercions are somewhat conservative, and only use a subset of what 
+ruby provides here and there. This is to avoid strangeness ala PHP... The 
+general philosophy is to provide the natural coercions we apply everyday.
+
+The master rules are
+
+* <code>coerce(value, Domain)</code> return <code>value</code> if 
+  <code>belongs_to?(value, Domain)</code> is true (see last section below)
+* <code>coerce(value, Domain)</code> returns <code>Domain.coerce(value)</code>
+  if the latter method exists.
+* <code>coerce("any string", Domain)</code> returns <code>Domain.parse(value)</code>
+  if the latter method exists.
+
+The specific implemented rules are 
 
     require 'myrrha/with_core_ext'
     require 'myrrha/coerce'
     
-    # it works on numerics
+    # NilClass -> _Anything_ returns nil, always
+    coerce(nil, Integer)              # => nil
+    
+    # Object -> String, via ruby's String()
+    coerce("hello", String)           # => "hello"
+    coerce(:hello, String)            # => "hello"
+
+    # String -> Numeric, through ruby's Integer() and Float()
     coerce("12", Integer)             # => 12
     coerce("12.0", Float)             # => 12.0
     
-    # but also on regexp (through Regexp.compile)
+    # String -> Numeric is smart enough:
+    coerce("12", Numeric)             # => 12 (Integer)
+    coerce("12.0", Numeric)           # => 12.0 (Float)
+    
+    # String -> Regexp, through Regexp.compile
     coerce("[a-z]+", Regexp)          # => /[a-z]+/
     
-    # and, yes, on Boolean (sorry Matz!)
+    # String -> Symbol, through to_sym
+    coerce("hello", Symbol)           # => :hello 
+    
+    # String -> Boolean (hum, sorry Matz!)
     coerce("true", Boolean)           # => true
     coerce("false", Boolean)          # => false
   
-    # and on date and time (through Date/Time.parse)  
+    # String -> Date, through Date.parse  
     require 'date'
-    require 'time'
     coerce("2011-07-20", Date)        # => #<Date: 2011-07-20 (4911525/2,0,2299161)>  
+    
+    # String -> Time, through Time.parse (just in time issuing of require('time'))
     coerce("2011-07-20 10:57", Time)  # => 2011-07-20 10:57:00 +0200
     
-    # why not on URI?
+    # String -> URI, through URI.parse
     require 'uri'
     coerce('http://google.com', URI)  # => #<URI::HTTP:0x8281ce0 URL:http://google.com>    
 
-    # on nil, it always returns nil
-    coerce(nil, Integer)              # => nil
+    # String -> Class and Module through constant lookup
+    coerce("Integer", Class)          # => Integer
+    coerce("Myrrha::Version", Module) # => Myrrha::Version
+    
+    # Symbol -> Class and Module through constant lookup
+    coerce(:Integer, Class)           # => Integer
+    coerce(:Enumerable, Module)       # => Enumerable
 
 ### No core extension? no problem!
 
