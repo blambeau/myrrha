@@ -209,6 +209,11 @@ module Myrrha
       yield(self) if block_given?
     end
     
+    # (see Myrrha.domain)
+    def domain(*args, &pred)
+      Myrrha.domain(*args, &pred)
+    end
+    
     #
     # Appends the list of rules with new ones.
     #
