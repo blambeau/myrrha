@@ -67,6 +67,7 @@ module Myrrha
     end
     
     # Specific basic rules
+    g.coercion Object,  String, lambda{|s,t| String(s)                     }
     g.coercion String, Integer, lambda{|s,t| Integer(s)                    }
     g.coercion String,   Float, lambda{|s,t| Float(s)                      }
     g.coercion String, Boolean, lambda{|s,t| Boolean(s)                    }

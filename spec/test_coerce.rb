@@ -8,6 +8,18 @@ describe "::Ruby's coercion " do
     end
   end
   
+  describe "to String" do
+    specify "from Integer" do
+      coerce(12,     String).should eql("12")
+    end
+    specify "from String" do
+      coerce("12",   String).should eql("12")
+    end
+    specify "from NilClass" do
+      coerce(nil,   String).should be_nil
+    end
+  end
+  
   describe "to Integer" do
     specify "from Integer" do
       coerce(12,     Integer).should eql(12)

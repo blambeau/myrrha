@@ -9,6 +9,10 @@
       coerce("Myrrha::Version", Module) # => Myrrha::Version
       [... and so on ...]
       
+* Added coercion rule from any Object to String through ruby's String(). Note 
+  that even with this coercion rule, coerce(nil, String) returns nil as that 
+  rule has higher priority.
+      
 * require('time') is automatically issued when trying to coerce a String to 
   a Time. Time.parse is obviously needed.   
 
