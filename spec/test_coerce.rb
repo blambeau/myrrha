@@ -102,6 +102,32 @@ describe "::Ruby's coercion " do
       coerce("http://www.google.com/", URI).should eql(URI.parse("http://www.google.com/"))
     end
   end
+
+  describe "to Module" do
+    specify "from String" do
+      coerce("Kernel", Module).should eql(Kernel)
+      coerce("::Kernel", Module).should eql(Kernel)
+      coerce("Myrrha::Version", Module).should eql(Myrrha::Version)
+      coerce("::Myrrha::Version", Module).should eql(Myrrha::Version)
+      coerce("Myrrha::Coercions", Module).should eql(Myrrha::Coercions)
+    end
+    it "should raise error if not a module" do
+      lambda{
+        coerce("Myrrha::VERSION", Module)
+      }.should raise_error(Myrrha::Error)
+    end
+  end
+  
+  describe "to Class" do
+    specify "from String" do
+      coerce("Myrrha::Coercions", Class).should eql(Myrrha::Coercions)
+    end
+    it "should raise error if not a module" do
+      lambda{
+        coerce("Myrrha::Version", Class)
+      }.should raise_error(Myrrha::Error)
+    end
+  end
   
   specify "to a class that respond to coerce" do
     class Coerceable

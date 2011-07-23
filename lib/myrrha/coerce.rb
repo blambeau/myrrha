@@ -48,6 +48,14 @@ module Myrrha
   # Defines basic coercions for Ruby, mostly from String 
   Coerce = coercions do |g|
     
+    # Returns a constant denoted by `s`
+    def g.constant_lookup(s, target_domain)
+      found = (s.split('::') - [""]).inject(Kernel){|cur,n| 
+        cur.const_get(n.to_sym)
+      }
+      belongs_to?(found, target_domain) ? found : throw(:nextrule)
+    end
+    
     # NilClass should return immediately
     g.upon(NilClass) do |s,t| 
       nil
@@ -59,12 +67,14 @@ module Myrrha
     end
     
     # Specific basic rules
-    g.coercion String, Integer, lambda{|s,t| Integer(s)        }
-    g.coercion String,   Float, lambda{|s,t| Float(s)          }
-    g.coercion String, Boolean, lambda{|s,t| Boolean(s)        }
-    g.coercion Integer,  Float, lambda{|s,t| Float(s)          }
-    g.coercion String,  Symbol, lambda{|s,t| s.to_sym          }
-    g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s) }
+    g.coercion String, Integer, lambda{|s,t| Integer(s)              }
+    g.coercion String,   Float, lambda{|s,t| Float(s)                }
+    g.coercion String, Boolean, lambda{|s,t| Boolean(s)              }
+    g.coercion Integer,  Float, lambda{|s,t| Float(s)                }
+    g.coercion String,  Symbol, lambda{|s,t| s.to_sym                }
+    g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s)       }
+    g.coercion String,  Class,  lambda{|s,t| g.constant_lookup(s, t) }
+    g.coercion String,  Module, lambda{|s,t| g.constant_lookup(s, t) }
       
     # By default, we try to invoke :parse on the class 
     g.fallback(String) do |s,t| 
