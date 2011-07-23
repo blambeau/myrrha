@@ -73,9 +73,9 @@ module Myrrha
     g.coercion Integer,  Float, lambda{|s,t| Float(s)                      }
     g.coercion String,  Symbol, lambda{|s,t| s.to_sym                      }
     g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s)             }
-    g.coercion Symbol,  Class,  lambda{|s,t| g.constant_lookup(s.to_s, t)  }
+    g.coercion Symbol,   Class, lambda{|s,t| g.constant_lookup(s.to_s, t)  }
     g.coercion Symbol,  Module, lambda{|s,t| g.constant_lookup(s.to_s, t)  }
-    g.coercion String,  Class,  lambda{|s,t| g.constant_lookup(s, t)       }
+    g.coercion String,   Class, lambda{|s,t| g.constant_lookup(s, t)       }
     g.coercion String,  Module, lambda{|s,t| g.constant_lookup(s, t)       }
     g.coercion String,    Time, lambda{|s,t| require 'time'; Time.parse(s) }
       
