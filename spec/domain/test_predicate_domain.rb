@@ -7,25 +7,25 @@ module Myrrha
         PredicateDomain.new(:test, nil, nil).name.should eq(:test)
       end
       
-      specify "belongs_to? with a proc of arity 1" do
+      specify "is_value? with a proc of arity 1" do
         seen = nil
         PredicateDomain.new(:test, nil, lambda{|s| seen=12; s==12}).
-                        belongs_to?(12).should be_true
+                        is_value?(12).should be_true
         seen.should eq(12)
       end
       
-      specify "belongs_to? with a proc of arity 2" do
+      specify "is_value? with a proc of arity 2" do
         seen = nil
         PredicateDomain.new(:test, nil, lambda{|s,t| seen=[s,t]; s==12}).
-                        belongs_to?(12, :hello).should be_true
+                        is_value?(12, :hello).should be_true
         seen.should eq([12,:hello])
       end
 
-      specify "belongs_to? with a object that respond to call" do
+      specify "is_value? with a object that respond to call" do
         obj = Object.new
         def obj.call(v); v == 12; end
         PredicateDomain.new(:test, nil, obj).
-                        belongs_to?(12).should be_true
+                        is_value?(12).should be_true
       end
       
       specify "subdomain_of?" do

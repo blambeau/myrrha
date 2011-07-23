@@ -7,10 +7,10 @@ module Myrrha
         ClassDomain.new(Integer).name.should eq(:Integer)
       end
       
-      specify "belongs_to?" do
-        ClassDomain.new(Integer).belongs_to?(12).should be_true
-        ClassDomain.new(Integer).belongs_to?(12.0).should be_false
-        ClassDomain.new(Numeric).belongs_to?(12.0).should be_true
+      specify "is_value?" do
+        ClassDomain.new(Integer).is_value?(12).should be_true
+        ClassDomain.new(Integer).is_value?(12.0).should be_false
+        ClassDomain.new(Numeric).is_value?(12.0).should be_true
       end
       
       specify "subdomain_of?" do

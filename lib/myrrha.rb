@@ -94,7 +94,7 @@ module Myrrha
       #
       # Returns true if <code>@clazz === value</code>, false otherwise
       #
-      def belongs_to?(value, target_domain = nil)
+      def is_value?(value, target_domain = nil)
         @clazz === value
       end
       
@@ -142,7 +142,7 @@ module Myrrha
       #
       # Checks if `value` belongs to the domain with the predicate.
       #
-      def belongs_to?(value, target_domain = nil)
+      def is_value?(value, target_domain = nil)
         p = @predicate
         res = if p.respond_to?(:call)
           p.respond_to?(:arity) && (p.arity == 2) ?
@@ -152,7 +152,7 @@ module Myrrha
           p === value
         end
         res ? res : 
-          (super_domain ? super_domain.belongs_to?(value, target_domain) : false)
+          (super_domain ? super_domain.is_value?(value, target_domain) : false)
       end
       
       # 
@@ -355,7 +355,7 @@ module Myrrha
     def belongs_to?(value, domain, target_domain = domain)
       case domain
       when Domain
-        domain.belongs_to?(value, target_domain)
+        domain.is_value?(value, target_domain)
       when Proc
         belongs_to? value, Domain.coerce(domain), target_domain
       else 
