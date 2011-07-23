@@ -97,6 +97,7 @@ module Myrrha
       def is_value?(value, target_domain = nil)
         @clazz === value
       end
+      alias :=== :is_value?
       
       #
       # Checks if this domain is a sub domain of `domain`
@@ -154,6 +155,7 @@ module Myrrha
         res ? res : 
           (super_domain ? super_domain.is_value?(value, target_domain) : false)
       end
+      alias :=== :is_value?
       
       # 
       # Checks if this domain is a sub domain of `domain`

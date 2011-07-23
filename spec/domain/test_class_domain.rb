@@ -13,6 +13,11 @@ module Myrrha
         ClassDomain.new(Numeric).is_value?(12.0).should be_true
       end
       
+      specify "===" do
+        ClassDomain.new(Integer).===(12).should be_true
+        ClassDomain.new(Integer).===(:hello).should be_false
+      end
+      
       specify "subdomain_of?" do
         int = ClassDomain.new(Integer)
         num = ClassDomain.new(Numeric)

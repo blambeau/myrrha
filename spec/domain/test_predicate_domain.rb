@@ -28,6 +28,13 @@ module Myrrha
                         is_value?(12).should be_true
       end
       
+      specify "===" do
+        d1 = PredicateDomain.new(nil, nil, lambda{|v| v == 12})
+        (d1 === 12).should be_true
+        (d1 === 14).should be_false
+        (d1 === :hello).should be_false
+      end
+      
       specify "subdomain_of?" do
         d1 = PredicateDomain.new(nil, nil, nil)
         d2 = PredicateDomain.new(nil, d1, nil)
