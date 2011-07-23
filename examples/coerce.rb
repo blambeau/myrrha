@@ -14,7 +14,6 @@ coerce("false", Boolean)          # => false
 
 # and on date and time (through Date/Time.parse)  
 require 'date'
-require 'time'
 coerce("2011-07-20", Date)        # => #<Date: 2011-07-20 (4911525/2,0,2299161)>  
 coerce("2011-07-20 10:57", Time)  # => 2011-07-20 10:57:00 +0200
 

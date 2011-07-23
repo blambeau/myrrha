@@ -8,6 +8,9 @@
       coerce(:Integer, Class)           # => Integer
       coerce("Myrrha::Version", Module) # => Myrrha::Version
       [... and so on ...]
+      
+* require('time') is automatically issued when trying to coerce a String to 
+  a Time. Time.parse is obviously needed.   
 
 # 1.0.0 / 2011-07-22
 

@@ -67,16 +67,17 @@ module Myrrha
     end
     
     # Specific basic rules
-    g.coercion String, Integer, lambda{|s,t| Integer(s)                   }
-    g.coercion String,   Float, lambda{|s,t| Float(s)                     }
-    g.coercion String, Boolean, lambda{|s,t| Boolean(s)                   }
-    g.coercion Integer,  Float, lambda{|s,t| Float(s)                     }
-    g.coercion String,  Symbol, lambda{|s,t| s.to_sym                     }
-    g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s)            }
-    g.coercion Symbol,  Class,  lambda{|s,t| g.constant_lookup(s.to_s, t) }
-    g.coercion Symbol,  Module, lambda{|s,t| g.constant_lookup(s.to_s, t) }
-    g.coercion String,  Class,  lambda{|s,t| g.constant_lookup(s, t)      }
-    g.coercion String,  Module, lambda{|s,t| g.constant_lookup(s, t)      }
+    g.coercion String, Integer, lambda{|s,t| Integer(s)                    }
+    g.coercion String,   Float, lambda{|s,t| Float(s)                      }
+    g.coercion String, Boolean, lambda{|s,t| Boolean(s)                    }
+    g.coercion Integer,  Float, lambda{|s,t| Float(s)                      }
+    g.coercion String,  Symbol, lambda{|s,t| s.to_sym                      }
+    g.coercion String,  Regexp, lambda{|s,t| Regexp.compile(s)             }
+    g.coercion Symbol,  Class,  lambda{|s,t| g.constant_lookup(s.to_s, t)  }
+    g.coercion Symbol,  Module, lambda{|s,t| g.constant_lookup(s.to_s, t)  }
+    g.coercion String,  Class,  lambda{|s,t| g.constant_lookup(s, t)       }
+    g.coercion String,  Module, lambda{|s,t| g.constant_lookup(s, t)       }
+    g.coercion String,    Time, lambda{|s,t| require 'time'; Time.parse(s) }
       
     # By default, we try to invoke :parse on the class 
     g.fallback(String) do |s,t| 

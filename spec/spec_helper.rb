@@ -3,7 +3,6 @@ require 'myrrha/with_core_ext'
 require 'myrrha/coerce'
 require 'myrrha/to_ruby_literal'
 require 'date'
-require 'time'
 require 'shared/a_value'
 
 unless defined?(SAFE_VALUES)
