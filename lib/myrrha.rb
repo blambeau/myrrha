@@ -110,6 +110,16 @@ module Myrrha
         is_subclass?(self.clazz, domain.clazz) 
       end
       
+      # Returns a string representation
+      def to_s
+        name.to_s
+      end
+      
+      # Returns a string inspection
+      def inspect
+        "Domain<#{to_s}>"
+      end
+      
       private 
       
       # Checks if `child` is a subclass of `parent`
@@ -163,6 +173,16 @@ module Myrrha
       def subdomain_of?(domain)
         (domain == self) ||
         (super_domain && super_domain.subdomain_of?(domain))
+      end
+      
+      # Returns a string representation
+      def to_s
+        name.to_s
+      end
+      
+      # Returns a string inspection
+      def inspect
+        "PredicateDomain<#{to_s}>"
       end
       
     end # class PredicateDomain

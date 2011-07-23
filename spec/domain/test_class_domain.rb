@@ -7,6 +7,11 @@ module Myrrha
         ClassDomain.new(Integer).name.should eq(:Integer)
       end
       
+      specify "to_s" do
+        ClassDomain.new(Integer).to_s.should eq("Integer")
+        ClassDomain.new(Integer).inspect.should eq("Domain<Integer>")
+      end
+      
       specify "is_value?" do
         ClassDomain.new(Integer).is_value?(12).should be_true
         ClassDomain.new(Integer).is_value?(12.0).should be_false
