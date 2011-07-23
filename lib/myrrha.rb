@@ -31,6 +31,24 @@ module Myrrha
   class Domain
     
     #
+    # Coerces `arg` to a domain
+    #
+    def self.coerce(arg)
+      case arg
+      when Class
+        ClassDomain.new(arg)
+      when Proc
+        PredicateDomain.new(:Unnamed, nil, arg)
+      else
+        if arg.respond_to?(:===)
+          PredicateDomain.new(:Unnamed, nil, arg)
+        else
+          raise ArgumentError, "Invalid value for Domain(): #{arg.inspect}"
+        end
+      end
+    end
+    
+    #
     # Defines a Domain through a ruby Class
     # 
     class ClassDomain < Domain
@@ -210,7 +228,8 @@ module Myrrha
     # @return self
     #
     def upon(source, converter = nil, &convproc)
-      @upons.send(@appender, [source, nil, converter || convproc])
+      rule = rule([source, nil, converter || convproc])
+      @upons.send(@appender, rule)
       self
     end
     
@@ -243,7 +262,8 @@ module Myrrha
     # @return self
     #
     def coercion(source, target = main_target_domain, converter = nil, &convproc)
-      @rules.send(@appender, [source, target, converter || convproc])
+      rule = rule([source, target, converter || convproc])
+      @rules.send(@appender, rule)
       self
     end
     
@@ -267,7 +287,8 @@ module Myrrha
     # @return self
     #
     def fallback(source, converter = nil, &convproc)
-      @fallbacks.send(@appender, [source, nil, converter || convproc])
+      rule = [source, nil, converter || convproc]
+      @fallbacks.send(@appender, rule)
       self
     end
     
@@ -354,6 +375,11 @@ module Myrrha
     end
     
     private
+    
+    # Coerces `args` to a rule triple 
+    def rule(args)
+      args
+    end
     
     # Extends existing rules
     def extend_rules(appender, block)
