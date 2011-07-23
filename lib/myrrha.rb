@@ -31,7 +31,7 @@ module Myrrha
   class Domain
     
     #
-    # Coerces a ruby Class to a Myrrha::Domain
+    # Defines a Domain through a ruby Class
     # 
     class ClassDomain < Domain
       
@@ -57,7 +57,7 @@ module Myrrha
       #
       # Returns true if <code>@clazz === value</code>, false otherwise
       #
-      def belongs_to?(value)
+      def belongs_to?(value, target_domain = nil)
         @clazz === value
       end
       
@@ -81,6 +81,50 @@ module Myrrha
       end
       
     end # class ClassDomain
+    
+    #
+    # Defines a Domain through a predicate
+    #
+    class PredicateDomain < Domain
+      
+      # @return [Symbol] domain name
+      attr_reader :name
+      
+      # @return [Domain] super domain
+      attr_reader :super_domain
+      
+      #
+      # Creates a domain instance
+      #
+      def initialize(name, super_domain, predicate)
+        @name = name
+        @super_domain = super_domain
+        @predicate = predicate
+      end
+      
+      #
+      # Checks if `value` belongs to the domain with the predicate.
+      #
+      def belongs_to?(value, target_domain = nil)
+        p = @predicate
+        if p.respond_to?(:call)
+          p.respond_to?(:arity) && (p.arity == 2) ?
+            p.call(value, target_domain) :
+            p.call(value)
+        else
+          p === value
+        end
+      end
+      
+      # 
+      # Checks if this domain is a sub domain of `domain`
+      #
+      def subdomain_of?(domain)
+        (domain == self) ||
+        (super_domain && super_domain.subdomain_of?(domain))
+      end
+      
+    end # class PredicateDomain
     
   end # class Domain
   
