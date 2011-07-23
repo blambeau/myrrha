@@ -25,6 +25,25 @@ module Myrrha
     Coercions.new(&block)
   end
   
+  #
+  # Creates a domain instance
+  #
+  # Example:
+  #
+  #   # from a class
+  #   Myrrha.domain(Integer)  # => ClassDomain<Integer>
+  #
+  #   # from a proc 
+  #   Myrrha.domain(:Name){|v| v.is_a?(Symbol)}
+  #
+  def self.domain(name, superdomain = nil, predicate = nil, &pred)
+    if superdomain.nil? and predicate.nil? and pred.nil?
+      Domain.coerce(name)
+    else
+      Domain::PredicateDomain.new(name, superdomain, predicate || pred)
+    end
+  end
+  
   # 
   # Encapsulates the notion of abstract domain
   #
@@ -333,18 +352,16 @@ module Myrrha
     #
     def belongs_to?(value, domain, target_domain = domain)
       case domain
+      when Domain
+        domain.belongs_to?(value, target_domain)
       when Proc
-        if domain.arity == 2
-          domain.call(value, target_domain)
-        elsif RUBY_VERSION < "1.9"
-          domain.call(value)
-        elsif domain
-          domain === value
-        end
+        belongs_to? value, Domain.coerce(domain), target_domain
       else 
-        domain.respond_to?(:===) ? 
-          domain === value :
+        if domain.respond_to?(:===) 
+          belongs_to? value, Domain.coerce(domain), target_domain
+        else 
           false
+        end
       end
     end
     
@@ -359,9 +376,13 @@ module Myrrha
     #
     def subdomain?(child, parent)
       return true if child == parent
-      (child.respond_to?(:superclass) && child.superclass) ? 
-        subdomain?(child.superclass, parent) :
-        false
+      if child.is_a?(Domain) && parent.is_a?(Domain)
+        child.subdomain_of?(parent)
+      else
+        (child.respond_to?(:superclass) && child.superclass) ? 
+          subdomain?(child.superclass, parent) :
+          false
+      end
     end
     
     #
