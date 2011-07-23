@@ -16,6 +16,11 @@
 * require('time') is automatically issued when trying to coerce a String to 
   a Time. Time.parse is obviously needed.   
 
+## Bug fixes
+
+* Fixed Coercions#dup when a set of rules has a main target domain. This fixes
+  the duplication of ToRubyLiteral rules, among others. 
+
 # 1.0.0 / 2011-07-22
 
 ## Enhancements

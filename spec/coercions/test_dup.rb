@@ -16,6 +16,13 @@ module Myrrha
       dupped.coerce("12", Float).should eql(12.0)
       lambda{ rules.coerce("12", Float) }.should raise_error(Myrrha::Error)
     end
+    
+    it "should not forget main_target_domain" do
+      rules = Coercions.new do |r|
+        r.main_target_domain = Integer
+      end
+      rules.dup.main_target_domain.should eql(Integer)
+    end
       
   end
 end
