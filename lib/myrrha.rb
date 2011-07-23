@@ -144,13 +144,15 @@ module Myrrha
       #
       def belongs_to?(value, target_domain = nil)
         p = @predicate
-        if p.respond_to?(:call)
+        res = if p.respond_to?(:call)
           p.respond_to?(:arity) && (p.arity == 2) ?
             p.call(value, target_domain) :
             p.call(value)
         else
           p === value
         end
+        res ? res : 
+          (super_domain ? super_domain.belongs_to?(value, target_domain) : false)
       end
       
       # 
