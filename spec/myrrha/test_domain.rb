@@ -27,5 +27,35 @@ module Myrrha
       PosInt.name.should eq("Myrrha::PosInt")
     end
     
+    describe ".new" do
+
+      specify "when call to super is not required" do
+        posint = Myrrha.domain(Integer){|i| i > 0}
+        posint.new(12).should eq(12)
+        lambda {
+          posint.new(0)
+        }.should raise_error(ArgumentError)
+      end
+      
+      specify "when call to super is required" do
+        class Color
+          attr_reader :r
+          attr_reader :g
+          attr_reader :b
+          def initialize(r,g,b)
+            @r, @g, @b = r, g, b
+          end
+        end
+        RedToZero = Myrrha.domain(Color){|c| c.r == 0}
+        (RedToZero === Color.new(0,1,1)).should be_true
+        (RedToZero === Color.new(1,1,1)).should be_false
+        RedToZero.new(0, 1, 1).should be_a(Color)
+        lambda{
+          RedToZero.new(1, 1, 1)
+        }.should raise_error(ArgumentError)
+      end
+      
+    end
+    
   end
 end

@@ -46,6 +46,19 @@ module Myrrha
   #
   module Domain
     
+    #
+    # Creates a new instance of this domain
+    #
+    def new(*args)
+      if (args.size == 1) && (self === args.first)
+        args.first
+      elsif superclass.respond_to?(:new)
+        new(super(*args))
+      else
+        raise ArgumentError, "Invalid value #{args.join(' ')} for #{self}"
+      end
+    end
+    
     # (see Class.superclass)
     def superclass
       @superclass
