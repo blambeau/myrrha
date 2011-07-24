@@ -12,5 +12,15 @@ module Myrrha
       }
     end
     
+    describe "with a super domain and a predicate" do
+      subject{ Myrrha.domain(Integer){|i| i > 0} }
+      specify{ 
+        subject.should be_a(Class) 
+        subject.superclass.should eq(Integer)
+        (subject === 12).should be_true
+        (subject === 0).should be_false
+      }
+    end
+    
   end
 end
