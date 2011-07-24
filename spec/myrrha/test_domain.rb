@@ -22,5 +22,10 @@ module Myrrha
       }
     end
     
+    specify "when affected to a constant" do
+      PosInt = Myrrha.domain(Integer){|i| i > 0}
+      PosInt.name.should eq("Myrrha::PosInt")
+    end
+    
   end
 end
