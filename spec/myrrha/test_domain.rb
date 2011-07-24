@@ -37,6 +37,7 @@ module Myrrha
         attr_reader :g
         attr_reader :b
         def initialize(r,g,b)
+          raise ArgumentError unless [r,g,b].all?{|i| i.is_a?(Integer)}
           @r, @g, @b = r, g, b
         end
       end
@@ -46,7 +47,11 @@ module Myrrha
         (RedToZero === Color.new(1,1,1)).should be_false
       }
       specify("#new") {
+        RedToZero.new(Color.new(0,1,1)).should be_a(Color)
         RedToZero.new(0, 1, 1).should be_a(Color)
+        lambda{
+          RedToZero.new(Color.new(1,1,1))
+        }.should raise_error(ArgumentError)
         lambda{
           RedToZero.new(1, 1, 1)
         }.should raise_error(ArgumentError)
