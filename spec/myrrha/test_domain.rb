@@ -29,6 +29,16 @@ module Myrrha
           PosInt.new(0)
         }.should raise_error(ArgumentError)
       }
+      it "should be usable in a case" do
+        [-12, 12].collect{|i|
+          case i
+          when PosInt
+            :posint
+          when Integer
+            :integer
+          end
+        }.should eq([:integer, :posint])
+      end
     end
       
     describe "A factored sub domain of a user-defined Class" do
