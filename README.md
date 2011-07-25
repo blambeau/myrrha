@@ -170,7 +170,7 @@ might be intrusive. Why not using your own set of coercion rules?
     MyRules.apply(:hello, Foo) 
     # =>  #<Foo:0x8b7d254 @arg=:hello>
 
-## The <code>to\_ruby\_literal() feature</code>
+## The <code>to\_ruby\_literal()</code> feature
 
     Myrrha.to_ruby_literal([:anything]) 
     [:anything].to_ruby_literal                  # with core extensions
