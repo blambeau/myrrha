@@ -328,6 +328,40 @@ which PRE holds are executed in order, until one succeed (chain of
 responsibility design pattern). This means that coercions always execute in 
 <code>O(number of rules)</code>.
 
+### Specifying converters
+
+A converter is the third (resp. second) element specified in a coercion rules
+(resp. an upon or fallback rule). A converter is generally a Proc of arity 2,
+which is passed the source value and requested target domain.
+
+    Myrrha.coercions do |r|
+      r.coercion String, Numeric, lambda{|value,requested_domain|
+        # this is converter code
+      }
+    end
+    convert("12", Integer)
+    
+A converter may also be specified as an array of domains. In this case, it is
+assumed that they for a path inside the convertion graph. Consider for example
+the following coercion rules (contrived example)
+
+    rules = Myrrha.coercions do |r|
+      r.coercion String,  Symbol, lambda{|s,t| s.to_sym }   # 1
+      r.coercion Float,   String, lambda{|s,t| s.to_s   }   # 2
+      r.coercion Integer, Float,  lambda{|s,t| Float(s) }   # 3
+      r.coercion Integer, Symbol, [Float, String]           # 4
+    end
+    
+The last rule specifies a convertion path, through intermediate domains. The 
+complete rule specifies that applying the following path will work
+
+    Integer -> Float -> String -> Symbol
+            #3       #2        #1
+ 
+Indeed,
+
+    rules.coerce(12, Symbol)      # => :"12.0" 
+  
 ### <code>belongs\_to?</code> and <code>subdomain?</code> 
 
 The pseudo-code given above relies on two main abstractions. Suppose the user 
@@ -373,4 +407,5 @@ makes a call to <code>coerce(value, requested_domain)</code>:
         # this is your last change, an Myrrha::Error will be raised if you fail
       end
       
-    end    
+    end
+    

@@ -27,11 +27,22 @@
   domain is a super domain of the requested one. Coercion only succeeds if
   the coerced value correctly belongs to the latter domain. Example:
   
-      Myrrha.coercions do |r|
+      rules = Myrrha.coercions do |r|
         r.coercion String, Numeric, lambda{|s,t| Integer(s)} 
       end 
-      r.coerce("12", Integer) # => 12            # failed in 1.0.0
-      r.coerce("12", Float)   # => Myrrha::Error
+      rules.coerce("12", Integer) # => 12            # failed in 1.0.0
+      rules.coerce("12", Float)   # => Myrrha::Error
+
+* You can now specify an coercion path, through an array of domains. For 
+  example (completely contrived, of course):
+
+    rules = Myrrha.coercions do |r|
+      r.coercion String,  Symbol, lambda{|s,t| s.to_sym }
+      r.coercion Float,   String, lambda{|s,t| s.to_s   }
+      r.coercion Integer, Float,  lambda{|s,t| Float(s) }
+      r.coercion Integer, Symbol, [Float, String] 
+    end
+    rules.coerce(12, Symbol)      # => :"12.0" 
 
 ## Bug fixes
 

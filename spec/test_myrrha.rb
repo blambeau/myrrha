@@ -111,4 +111,14 @@ describe Myrrha do
     end
   end
   
+  specify "path convertions (from CHANGELOG)" do
+    rules = Myrrha.coercions do |r|
+      r.coercion String,  Symbol, lambda{|s,t| s.to_sym }
+      r.coercion Float,   String, lambda{|s,t| s.to_s   }
+      r.coercion Integer, Float,  lambda{|s,t| Float(s) }
+      r.coercion Integer, Symbol, [Float, String] 
+    end
+    rules.coerce(12, Symbol).should eql(:"12.0") 
+  end
+  
 end
