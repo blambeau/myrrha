@@ -8,7 +8,12 @@
       coerce(:Integer, Class)           # => Integer
       coerce("Myrrha::Version", Module) # => Myrrha::Version
       [... and so on ...]
-      
+
+* Added following coercion rules for Booleans
+
+      coerce("true", TrueClass)         # => true 
+      coerce("false", FalseClass)       # => false 
+
 * Added coercion rule from any Object to String through ruby's String(). Note 
   that even with this coercion rule, coerce(nil, String) returns nil as that 
   rule has higher priority.
@@ -31,7 +36,7 @@
 ## Bug fixes
 
 * Fixed Coercions#dup when a set of rules has a main target domain. This fixes
-  the duplication of ToRubyLiteral rules, among others. 
+  the duplication of ToRubyLiteral rules, among others.
 
 # 1.0.0 / 2011-07-22
 

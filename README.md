@@ -92,6 +92,8 @@ The specific implemented rules are
     # String -> Boolean (hum, sorry Matz!)
     coerce("true", Boolean)           # => true
     coerce("false", Boolean)          # => false
+    coerce("true", TrueClass)         # => true
+    coerce("false", FalseClass)       # => false
   
     # String -> Date, through Date.parse  
     require 'date'
@@ -340,6 +342,8 @@ makes a call to <code>coerce(value, requested_domain)</code>:
 
 * <code>subdomain?(SourceDomain,TargetDomain)</code> is true iif
   * <code>SourceDomain == TargetDomain</code> yields true
+  * TargetDomain respond to <code>:superdomain_of?</code> and answers true on 
+    SourceDomain 
   * SourceDomain and TargetDomain are both classes and the latter is a super 
     class of the former 
     

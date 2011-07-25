@@ -74,6 +74,20 @@ describe "::Ruby's coercion " do
       lambda{coerce("abc", Boolean)}.should raise_error(Myrrha::Error)
     end
   end
+  
+  describe "to TrueClass" do
+    specify "from String" do
+      coerce("true", TrueClass).should eql(true)
+      lambda{ coerce("false", TrueClass) }.should raise_error(Myrrha::Error)
+    end
+  end
+  
+  describe "to FalseClass" do
+    specify "from String" do
+      coerce("false", FalseClass).should eql(false)
+      lambda{ coerce("true", FalseClass) }.should raise_error(Myrrha::Error)
+    end
+  end
 
   describe "to Date" do
     let(:expected){ Date.parse("2011-07-20") }

@@ -15,6 +15,11 @@ module Myrrha
     #
     def self.superclass; Object; end
       
+    # Returns true if x is TrueClass or FalseClass
+    def self.superdomain_of?(x)
+      (x == TrueClass) || (x == FalseClass) 
+    end
+      
     #
     # Returns true if `val` is <code>true</code> or <code>false</code>, false 
     # otherwise.
