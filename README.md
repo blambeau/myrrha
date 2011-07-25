@@ -25,7 +25,7 @@ a numeric, a boolean, a date, a time, an URI, and so on.
 * http://github.com/blambeau/myrrha (source code)
 * http://rubygems.org/gems/myrrha (download)
 
-## The missing <code>coerce()</code>
+## The <code>coerce()</code> feature
 
     Myrrha.coerce(:anything, Domain)
     coerce(:anything, Domain)                    # with core extensions
@@ -170,7 +170,7 @@ might be intrusive. Why not using your own set of coercion rules?
     MyRules.apply(:hello, Foo) 
     # =>  #<Foo:0x8b7d254 @arg=:hello>
 
-## The missing <code>to\_ruby\_literal()</code>
+## The <code>to\_ruby\_literal() feature</code>
 
     Myrrha.to_ruby_literal([:anything]) 
     [:anything].to_ruby_literal                  # with core extensions
@@ -362,7 +362,7 @@ Indeed,
 
     rules.coerce(12, Symbol)      # => :"12.0" 
   
-### <code>belongs\_to?</code> and <code>subdomain?</code> 
+### Semantics of <code>belongs\_to?</code> and <code>subdomain?</code> 
 
 The pseudo-code given above relies on two main abstractions. Suppose the user 
 makes a call to <code>coerce(value, requested_domain)</code>:
