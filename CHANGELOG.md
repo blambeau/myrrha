@@ -16,6 +16,18 @@
 * require('time') is automatically issued when trying to coerce a String to 
   a Time. Time.parse is obviously needed.   
 
+## Enhancements to the general coercion mechanism
+
+* An optimistic coercion is tried when a rule is encountered whose target 
+  domain is a super domain of the requested one. Coercion only succeeds if
+  the coerced value correctly belongs to the latter domain. Example:
+  
+      Myrrha.coercions do |r|
+        r.coercion String, Numeric, lambda{|s,t| Integer(s)} 
+      end 
+      r.coerce("12", Integer) # => 12            # failed in 1.0.0
+      r.coerce("12", Float)   # => Myrrha::Error
+
 ## Bug fixes
 
 * Fixed Coercions#dup when a set of rules has a main target domain. This fixes
