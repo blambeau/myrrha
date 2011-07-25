@@ -184,11 +184,16 @@ module Myrrha
       error = nil
       each_rule do |from,to,converter|
         next unless from.nil? or belongs_to?(value, from, target_domain)
-        next unless to.nil?   or subdomain?(to, target_domain)
         begin
-          catch(:nextrule){
-            return convert(value, target_domain, converter)
-          }
+          catch(:nextrule) do
+            if to.nil? or subdomain?(to, target_domain)
+              got = convert(value, target_domain, converter)
+              return got
+            elsif subdomain?(target_domain, to)
+              got = convert(value, target_domain, converter)
+              return got if belongs_to?(got, target_domain)
+            end
+          end
         rescue => ex
           error = ex.message unless error
         end

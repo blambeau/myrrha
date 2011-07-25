@@ -84,4 +84,12 @@ describe Myrrha do
     rules.coerce("hello", Symbol).should eq(:HELLO)
   end
   
+  it "should used superdomain rules in an optimistic strategy" do
+    rules = Myrrha.coercions do |c|
+      c.coercion String, Numeric, lambda{|s,t| Integer(s)}
+    end
+    rules.coerce("12", Integer).should eql(12)
+    lambda{ rules.coerce("12", Float) }.should raise_error(Myrrha::Error)
+  end
+  
 end
