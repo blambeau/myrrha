@@ -92,4 +92,23 @@ describe Myrrha do
     lambda{ rules.coerce("12", Float) }.should raise_error(Myrrha::Error)
   end
   
+  describe "path convertions" do
+    let(:rules){
+      Myrrha.coercions do |c|
+        c.coercion Integer, String, lambda{|s,t| s.to_s}
+        c.coercion String,  Float,  lambda{|s,t| Float(s)}
+        c.coercion Integer, Float,  [String]
+        c.coercion Float,   String, lambda{|s,t| s.to_s} 
+        c.coercion String,  Symbol, lambda{|s,t| s.to_sym}
+        c.coercion Integer, Symbol, [Float, String]
+      end
+    }
+    it "should work with a simple and single" do
+      rules.coerce(12, Float).should eql(12.0)
+    end
+    it "should work with a complex and multiple path" do
+      rules.coerce(12, Symbol).should eql(:"12.0")
+    end
+  end
+  
 end

@@ -284,6 +284,9 @@ module Myrrha
     def convert(value, target_domain, converter)
       if converter.respond_to?(:call)
         converter.call(value, target_domain)
+      elsif converter.is_a?(Array)
+        path = converter + [target_domain]
+        path.inject(value){|cur,ndom| coerce(cur, ndom)}
       else
         raise ArgumentError, "Unable to use #{converter} for coercing"
       end
