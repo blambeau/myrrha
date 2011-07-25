@@ -1,4 +1,4 @@
-# Myrrha
+# Myrrha (v1.1.0)
 
 ## Description
 
@@ -408,4 +408,3 @@ makes a call to <code>coerce(value, requested_domain)</code>:
       end
       
     end
-    
