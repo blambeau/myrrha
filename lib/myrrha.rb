@@ -190,7 +190,7 @@ module Myrrha
               got = convert(value, target_domain, converter)
               return got
             elsif subdomain?(target_domain, to)
-              got = convert(value, target_domain, converter)
+              got = convert(value, to, converter)
               return got if belongs_to?(got, target_domain)
             end
           end
