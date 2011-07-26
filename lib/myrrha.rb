@@ -9,6 +9,22 @@ module Myrrha
   class Error < StandardError; end
   
   #
+  # Creates a domain instance by specialization by constraint
+  #
+  # @param [Class] superdom the superdomain of the created domain
+  # @param [Proc] pred the domain predicate
+  # @return [Class] the created domain
+  #
+  def self.domain(superdom = Object, &pred) 
+    dom = Class.new(superdom).extend(Domain)
+    dom.instance_eval {
+      @superclass = superdom
+      @predicate = pred
+    }
+    dom
+  end
+  
+  #
   # Builds a set of coercions rules. 
   #
   # Example:
@@ -26,6 +42,50 @@ module Myrrha
   end
     
   # 
+  # Encapsulates class methods of created domains
+  #
+  module Domain
+    
+    #
+    # Creates a new instance of this domain
+    #
+    def new(*args)
+      if (args.size == 1) && (superclass === args.first)
+        if self === args.first
+          args.first
+        else
+          raise ArgumentError, "Invalid value #{args.join(' ')} for #{self}"
+        end
+      elsif superclass.respond_to?(:new)
+        new(super(*args))
+      else
+        raise ArgumentError, "Invalid value #{args.join(' ')} for #{self}"
+      end
+    end
+    
+    # (see Class.superclass)
+    def superclass
+      @superclass
+    end
+    
+    #
+    # Returns the specialization by constraint predicate
+    #
+    # @return [Proc] the domain predicate
+    #  
+    def predicate
+      @predicate
+    end
+    
+    #
+    # Checks if `value` belongs to this domain
+    # 
+    def ===(value)
+      (superclass === value) && @predicate.call(value)
+    end
+    
+  end # module Domain
+    
   # Defines a set of coercion rules
   #
   class Coercions
