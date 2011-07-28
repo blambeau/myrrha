@@ -17,7 +17,7 @@ a numeric, a boolean, a date, a time, an URI, and so on.
     # Bug fixes (tiny) do not even add new default rules to coerce and 
     # to\_ruby\_literal. Minor version can, which could break your code. 
     # Therefore, please always use:
-    gem "myrrha", "~> 1.0.0"
+    gem "myrrha", "~> 1.1.0"
 
 ## Links
 
