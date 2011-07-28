@@ -33,6 +33,6 @@ rules.coerce("-12", Integer)
 begin
   rules.coerce("-12", PosInt)
   raise "Unexpected case: rules.coerce('-12', PosInt) succeeds"
-rescue ArgumentError => ex
+rescue Myrrha::Error => ex
   puts ex.message
 end

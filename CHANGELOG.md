@@ -33,10 +33,10 @@
       rules = Myrrha.coercions do |r|
         r.coercion String, Numeric, lambda{|s,t| Integer(s)} 
       end 
-      rules.coerce("12", Integer) # => 12            # failed in 1.0.0
+      rules.coerce("12", Integer) # => 12 in 1.1.0 while it failed in 1.0.0
       rules.coerce("12", Float)   # => Myrrha::Error
 
-* You can now specify an coercion path, through an array of domains. For 
+* You can now specify a coercion path, through an array of domains. For 
   example (completely contrived, of course):
 
       rules = Myrrha.coercions do |r|
@@ -45,7 +45,7 @@
         r.coercion Integer, Float,  lambda{|s,t| Float(s) }
         r.coercion Integer, Symbol, [Float, String] 
       end
-      rules.coerce(12, Symbol)      # => :"12.0" 
+      rules.coerce(12, Symbol)      # => :"12.0" as Symbol(String(Float(12)))
 
 * You can now define domains through specialization by constraint (sbyc) on ruby 
   classes, using Myrrha.domain:
@@ -54,7 +54,14 @@
       PosInt = Myrrha.domain(Integer){|i| i > 0 }
   
   Created domain is a real Class instance, that correctly responds to :=== 
-  and :superclass. See README for more about this feature.
+  and :superclass. The feature is mainly introduced for supporting the following 
+  kind of coercion scenarios (see README for more about this):
+  
+      rules = Myrrha.coercions do |r|
+        r.coercion String, Integer, lambda{|s,t| Integer(s)}  
+      end 
+      rules.coerce("12",  PosInt) # => 12
+      rules.coerce("-12", PosInt) # => ArgumentError, "Invalid value -12 for PosInt"  
 
 ## Bug fixes
 
