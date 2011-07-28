@@ -3,6 +3,9 @@
 template-info:
   name: "ruby"
   version: 1.3.0
+  manifest:
+    tasks/debug_mail.txt:
+      safe-override: false
 variables:
   lower: 
     myrrha
@@ -33,5 +36,7 @@ variables:
     - {name: wlang,        version: "~> 0.10.1", groups: [development]}
     - {name: noe,          version: "~> 1.3.0",  groups: [development]}
   rake_tasks:
+    debug_mail:
+      rx_changelog_sections: /^# /
     spec_test:
       pattern: spec/**/test_*.rb
