@@ -21,7 +21,7 @@ a numeric, a boolean, a date, a time, an URI, and so on.
 
 ## Links
 
-* http://rubydoc.info/github/blambeau/myrrha/master/frames (read this file there!)
+* http://www.rubydoc.info/gems/myrrha/1.1.0/file/README.md (read this file there!)
 * http://github.com/blambeau/myrrha (source code)
 * http://rubygems.org/gems/myrrha (download)
 
