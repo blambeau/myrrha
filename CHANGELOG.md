@@ -21,6 +21,9 @@
 * require('time') is automatically issued when trying to coerce a String to 
   a Time. Time.parse is obviously needed.   
 
+* Myrrha::Boolean (Boolean with core extensions) is now a factored domain (see
+  below). Therefore, it is now a true Class instance. 
+
 ## Enhancements to the general coercion mechanism
 
 * An optimistic coercion is tried when a rule is encountered whose target 
@@ -47,7 +50,7 @@
 * You can now define domains through specialization by constraint (sbyc) on ruby 
   classes, using Myrrha.domain:
   
-      # Creates a positive integer domain, as ... positive integers
+      # Create a positive integer domain, as ... positive integers
       PosInt = Myrrha.domain(Integer){|i| i > 0 }
   
   Created domain is a real Class instance, that correctly responds to :=== 

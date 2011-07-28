@@ -408,3 +408,54 @@ makes a call to <code>coerce(value, requested_domain)</code>:
       end
       
     end
+
+### Factoring domains through specialization by constraint
+
+Specialization by constraint (SByC) is a theory of types for which the following
+rules hold:
+
+* A type (aka domain) is a set of values
+* A sub-type is a subset
+* A sub-type can therefore be specified through a predicate on the super domain
+
+For example, "positive integers" is a sub type of "integers" where the predicate
+is "value > 0". 
+
+Myrrha comes with a small feature allowing you to create types 'ala' SByC:
+
+    PosInt = Myrrha.domain(Integer){|i| i > 0}
+    PosInt.name       # => "PosInt"
+    PosInt.class      # => Class
+    PosInt.superclass # => Integer
+    PosInt.ancestors  # => [PosInt, Integer, Numeric, Comparable, Object, Kernel, BasicObject]
+    PosInt === 10     # => true
+    PosInt === -1     # => false
+    PosInt.new(10)    # => 10
+    PosInt.new(-10)   # => ArgumentError, "Invalid value -10 for PosInt"
+    
+Note that the feature is very limited, and is not intended to provide a truly
+coherent typing framework. For example:
+
+    10.is_a?(PosInt)    # => false
+    10.kind_of?(PosInt) # => false 
+      
+Instead, Myrrha domains are only provided as an helper to build sound coercions 
+rules easily while 1) keeping a Class-based approach to source and target 
+domains and 2) having friendly error messages 3) really supporting true 
+reasoning on types and value:
+
+    # Only a rule that converts String to Integer
+    rules = Myrrha.coercions do |r|
+      r.coercion String, Integer, lambda{|s,t| Integer(s)}  
+    end 
+    
+    # it succeeds on both integers and positive integers
+    rules.coerce("12", Integer)   # => 12
+    rules.coerce("12", PosInt)    # => 12
+    
+    # and correctly fails in each case!
+    rules.coerce("-12", Integer)  # => -12
+    rules.coerce("-12", PosInt)   # => ArgumentError, "Invalid value -12 for PosInt"
+    
+    
+    
