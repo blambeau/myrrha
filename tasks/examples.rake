@@ -6,6 +6,7 @@ task :examples do
       print '.'
     else
       print '*'
+      raise "Example #{file} failed." 
     end
   end
 end
