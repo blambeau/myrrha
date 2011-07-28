@@ -36,13 +36,22 @@
 * You can now specify an coercion path, through an array of domains. For 
   example (completely contrived, of course):
 
-    rules = Myrrha.coercions do |r|
-      r.coercion String,  Symbol, lambda{|s,t| s.to_sym }
-      r.coercion Float,   String, lambda{|s,t| s.to_s   }
-      r.coercion Integer, Float,  lambda{|s,t| Float(s) }
-      r.coercion Integer, Symbol, [Float, String] 
-    end
-    rules.coerce(12, Symbol)      # => :"12.0" 
+      rules = Myrrha.coercions do |r|
+        r.coercion String,  Symbol, lambda{|s,t| s.to_sym }
+        r.coercion Float,   String, lambda{|s,t| s.to_s   }
+        r.coercion Integer, Float,  lambda{|s,t| Float(s) }
+        r.coercion Integer, Symbol, [Float, String] 
+      end
+      rules.coerce(12, Symbol)      # => :"12.0" 
+
+* You can now define domains through specialization by constraint (sbyc) on ruby 
+  classes, using Myrrha.domain:
+  
+      # Creates a positive integer domain, as ... positive integers
+      PosInt = Myrrha.domain(Integer){|i| i > 0 }
+  
+  Created domain is a real Class instance, that correctly responds to :=== 
+  and :superclass. See README for more about this feature.
 
 ## Bug fixes
 

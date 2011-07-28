@@ -29,6 +29,13 @@ module Myrrha
           PosInt.new(0)
         }.should raise_error(ArgumentError)
       }
+      specify("#superclass"){
+        PosInt.superclass.should eql(Integer)
+      }
+      specify("#superdomain_of?"){
+        PosInt.superdomain_of?(Object).should be_false
+        PosInt.superdomain_of?(Integer).should be_false
+      }
       it "should be usable in a case" do
         [-12, 12].collect{|i|
           case i

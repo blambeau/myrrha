@@ -2,34 +2,12 @@ require 'myrrha'
 module Myrrha
   
   #
-  # Defines the missing Boolean type.
+  # Defines the missing Boolean as a Myrrha's domain
   #
-  # This module mimics a Ruby missing Boolean type. 
-  #
-  module Boolean
+  Boolean = Myrrha.domain(Object, [TrueClass, FalseClass]){|x| 
+    (x==true) || (x==false)
+  }
 
-    #
-    # Returns Object, as the superclass of Boolean
-    #
-    # @return [Class] Object
-    #
-    def self.superclass; Object; end
-      
-    # Returns true if x is TrueClass or FalseClass
-    def self.superdomain_of?(x)
-      (x == TrueClass) || (x == FalseClass) 
-    end
-      
-    #
-    # Returns true if `val` is <code>true</code> or <code>false</code>, false 
-    # otherwise.
-    #
-    def self.===(val)
-      (val == true) || (val == false)
-    end
-    
-  end # module Boolean
-  
   #
   # Coerces _s_ to a Boolean
   #
