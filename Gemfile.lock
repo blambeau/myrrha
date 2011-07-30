@@ -1,19 +1,14 @@
-PATH
-  remote: .
-  specs:
-    myrrha (1.2.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
     bluecloth (2.1.0)
     diff-lcs (1.1.2)
     highline (1.6.2)
-    noe (1.3.0)
+    noe (1.4.0)
       highline (~> 1.6.0)
-      quickl (~> 0.2.0)
+      quickl (~> 0.3.0)
       wlang (~> 0.10.1)
-    quickl (0.2.2)
+    quickl (0.3.0)
     rake (0.9.2)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
@@ -33,8 +28,7 @@ PLATFORMS
 DEPENDENCIES
   bluecloth (~> 2.1.0)
   bundler (~> 1.0)
-  myrrha!
-  noe (~> 1.3.0)
+  noe (~> 1.4.0)
   rake (~> 0.9.2)
   rspec (~> 2.6.0)
   wlang (~> 0.10.1)
