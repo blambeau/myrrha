@@ -456,6 +456,15 @@ reasoning on types and value:
     # and correctly fails in each case!
     rules.coerce("-12", Integer)  # => -12
     rules.coerce("-12", PosInt)   # => ArgumentError, "Invalid value -12 for PosInt"
-    
-    
-    
+
+Note that if you want to provide additional tooling to your factored domain, 
+the following way of creating them also works:
+
+    class PosInt < Integer
+      extend Myrrha::Domain
+      
+      def self.predicate
+        @predicate ||= lambda{|i| i > 0}
+      end
+      
+    end

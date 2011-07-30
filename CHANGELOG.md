@@ -1,3 +1,20 @@
+# 1.2.0 / FIX ME
+
+* Added the ability to created SByC domains through simple module extension:
+
+      NegInt = Myrrha.domain(Integer){|i| i < 0}
+      
+  can also be built the following way:
+
+      class NegInt < Integer
+        extend Myrrha::Domain
+        
+        def self.predicate
+          @predicate ||= lambda{|i| i < 0}
+        end
+        
+      end
+
 # 1.1.0 / 2011-07-28
 
 ## Enhancements to coerce()
