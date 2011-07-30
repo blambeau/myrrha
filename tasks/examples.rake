@@ -1,7 +1,8 @@
 task :examples do
+  lib = File.expand_path('../../lib', __FILE__)
   dir = File.expand_path('../../examples', __FILE__)
   Dir["#{dir}/*.rb"].each do |file|
-    str = `ruby #{file}`
+    str = `ruby -I#{lib} #{file}`
     if $?.exitstatus == 0
       print '.'
     else
