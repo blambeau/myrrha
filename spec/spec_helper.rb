@@ -5,8 +5,8 @@ require 'myrrha/to_ruby_literal'
 require 'date'
 require 'shared/a_value'
 
-unless defined?(SAFE_VALUES)
-  SAFE_VALUES = {
+unless defined?(Myrrha::SAFE_VALUES)
+  Myrrha::SAFE_VALUES = {
     NilClass   => [ nil ],
     TrueClass  => [ true ],
     FalseClass => [ false ],
@@ -22,12 +22,13 @@ unless defined?(SAFE_VALUES)
     Array      => [ [], [nil], [1, "hello"] ],
     Hash       => [ {}, {1 => 2, :hello => "world"} ]
   }
-  UNSAFE_VALUES = {
+  Myrrha::UNSAFE_VALUES = {
     Date  => [ Date.today ],
     Time  => [ Time.now   ],
     Array => [ [Date.today, Time.now] ],
     Hash  => [ {Date.today => Time.now} ],
     Range => [ Date.today..(Date.today+1) ]
   }
-  VALUES = SAFE_VALUES.values.inject([], :+) + UNSAFE_VALUES.values.inject([], :+)
+  Myrrha::VALUES = Myrrha::SAFE_VALUES.values.inject([], :+) + 
+                   Myrrha::UNSAFE_VALUES.values.inject([], :+)
 end
