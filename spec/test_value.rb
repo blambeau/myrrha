@@ -1,3 +1,4 @@
+require 'spec_helper'
 $VALUES.each do |value|
   describe "#{value} (#{value.class})" do
     subject{ value }
