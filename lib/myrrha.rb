@@ -18,8 +18,8 @@ module Myrrha
   def self.domain(superdom = Object, subdoms=nil, &pred) 
     dom = Class.new(superdom).extend(Domain)
     dom.instance_eval {
-      @sub_domains = subdoms 
-      @super_domain = superdom
+      @subdomains = subdoms 
+      @superdomain = superdom
       @predicate = pred
     }
     dom
@@ -66,14 +66,14 @@ module Myrrha
     
     # (see Class.superclass)
     def superclass
-      @super_domain
+      superdomain || super
     end
     
     #
-    # Checks if `value` belongs to this domain
-    # 
-    def ===(value)
-      (superclass === value) && @predicate.call(value)
+    # Returns the super domain if installed
+    #
+    def superdomain
+      @superdomain
     end
     
     #
@@ -81,7 +81,14 @@ module Myrrha
     # case in Ruby.
     #
     def superdomain_of?(child)
-      Array(@sub_domains).include?(child)
+      Array(@subdomains).include?(child)
+    end
+    
+    #
+    # Checks if `value` belongs to this domain
+    # 
+    def ===(value)
+      (superclass === value) && predicate.call(value)
     end
     
     #
