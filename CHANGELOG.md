@@ -15,6 +15,9 @@
         
       end
 
+* Cleaned the development dependencies, travis-ci.org continuous integration,
+  and ruby.noe template.
+
 # 1.1.0 / 2011-07-28
 
 ## Enhancements to coerce()
