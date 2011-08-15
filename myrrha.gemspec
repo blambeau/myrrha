@@ -21,13 +21,13 @@ Gem::Specification.new do |s|
   # A short summary of this gem
   #
   # This is displayed in `gem list -d`.
-  s.summary = "Myrrha provides the coercion framework which is missing to Ruby, IMHO."
+  s.summary = "Myrrha provides the coercion framework which is missing to Ruby."
 
   # A long description of this gem (required)
   #
   # The description should be more detailed than the summary.  For example,
   # you might wish to copy the entire README into the description.
-  s.description = "Myrrha provides the coercion framework which is missing to Ruby, IMHO. Coercions\nare simply defined as a set of rules for converting values from source to target\ndomains (in an abstract sense). As a typical and useful example, it comes bundled\nwith a coerce() method providing a unique entry point for converting a string to \na numeric, a boolean, a date, a time, an URI, and so on.  "
+  s.description = "Myrrha provides the coercion framework which is missing to Ruby. Coercions\nare simply defined as a set of rules for converting values from source to target\ndomains (in an abstract sense). As a typical and useful example, it comes with \na coerce() method providing a unique entry point for converting a string to \na numeric, a boolean, a date, a time, an URI, and so on.  "
   
   # The URL of this gem home page (optional)
   s.homepage = "http://rubydoc.info/github/blambeau/myrrha/master/frames"
