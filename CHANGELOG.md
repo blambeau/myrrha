@@ -1,4 +1,4 @@
-# 1.2.0 / FIX ME
+# 1.2.0 / 2011-08-15
 
 * Added the ability to created SByC domains through simple module extension:
 
