@@ -1,3 +1,8 @@
+# 1.2.1 / 2011-08-31
+
+* Regenerated gem using Ruby 1.8.7, to avoid Rubygems/Syck/Ruby issues (see
+  https://github.com/blambeau/viiite/issues/2)
+
 # 1.2.0 / 2011-08-15
 
 * Added the ability to created SByC domains through simple module extension:
