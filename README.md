@@ -1,5 +1,8 @@
 # Myrrha (v1.1.0)
 
+[![Build Status](https://secure.travis-ci.org/blambeau/myrrha.png)](http://travis-ci.org/blambeau/myrrha)
+[![Dependency Status](https://gemnasium.com/blambeau/myrrha.png)](https://gemnasium.com/blambeau/myrrha)
+
 ## Description
 
 Myrrha provides the coercion framework which is missing to Ruby, IMHO. Coercions
