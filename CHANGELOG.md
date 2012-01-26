@@ -1,3 +1,20 @@
+# 1.2.2 / 2012-01-26
+
+* Ensure that inheritance intuitively applies when duplicating a set of coercion
+  rules. Rules that, in the parent, rely on the recursive application of other 
+  rules (such as recursively applying coercions on arrays) will now correctly 
+  use the rules defined on the duplicated Coercions object.
+
+  In particular, this means that the following scenario now correctly works:
+
+      Dupped = Myrrha::ToRubyLiteral.dup.append do |r|
+        r.coercion(Foo){|s,_| ...}
+      end
+      Dupped.apply([1, Foo.new])
+
+  In the scenario above, Foo was marshalled as the new rules was not used by 
+  the Array rule, defined on the parent.
+
 # 1.2.1 / 2011-08-31
 
 * Regenerated gem using Ruby 1.8.7, to avoid Rubygems/Syck/Ruby issues (see
