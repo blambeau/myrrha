@@ -1,4 +1,4 @@
-# Myrrha (v1.1.0)
+# Myrrha (v1.2.2)
 
 [![Build Status](https://secure.travis-ci.org/blambeau/myrrha.png)](http://travis-ci.org/blambeau/myrrha)
 [![Dependency Status](https://gemnasium.com/blambeau/myrrha.png)](https://gemnasium.com/blambeau/myrrha)
@@ -20,7 +20,7 @@ a numeric, a boolean, a date, a time, an URI, and so on.
     # Bug fixes (tiny) do not even add new default rules to coerce and 
     # to\_ruby\_literal. Minor version can, which could break your code. 
     # Therefore, please always use:
-    gem "myrrha", "~> 1.1.0"
+    gem "myrrha", "~> 1.2.2"
 
 ## Links
 
