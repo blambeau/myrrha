@@ -112,13 +112,14 @@ module Myrrha
     #
     # Creates an empty list of coercion rules
     #
-    def initialize(upons = [], rules = [], fallbacks = [], main_target_domain = nil)
-      @upons = upons
-      @rules = rules
-      @fallbacks = fallbacks
+    def initialize(&defn)
+      @definitions = []
+      @upons = []
+      @rules = []
+      @fallbacks = []
       @appender = :<<
-      @main_target_domain = main_target_domain
-      yield(self) if block_given?
+      @main_target_domain = nil
+      extend_rules(:<<, defn) if defn
     end
     
     #
@@ -333,13 +334,18 @@ module Myrrha
     # @return [Coercions] a copy of this set of rules
     # 
     def dup
-      Coercions.new(@upons.dup, @rules.dup, @fallbacks.dup, main_target_domain)
+      c = Coercions.new
+      @definitions.each do |defn|
+        c.extend_rules(*defn)
+      end
+      c
     end
     
-    private
+    protected
     
     # Extends existing rules
     def extend_rules(appender, block)
+      @definitions << [appender, block]
       @appender = appender
       block.call(self)
       self
