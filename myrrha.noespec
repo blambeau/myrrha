@@ -1,6 +1,6 @@
 template-info:
-  name: "ruby"
-  version: 1.7.0
+  name: rubygem.noe
+  version: 1.7.4
   manifest:
     tasks/debug_mail.txt:
       safe-override: false
