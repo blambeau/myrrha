@@ -1,3 +1,8 @@
+# 2.0.0 / FIX ME
+
+* Removed support for ruby 1.8.x
+* Coercions#subdomain? and Coercions#belongs_to? have been made protected.
+
 # 1.2.2 / 2012-01-26
 
 * Ensure that inheritance intuitively applies when duplicating a set of coercion

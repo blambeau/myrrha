@@ -170,6 +170,21 @@ module Myrrha
     end
     alias :apply :coerce
 
+    # Duplicates this set of rules in such a way that the original will not
+    # be affected by any change made to the copy.
+    #
+    # @return [Coercions] a copy of this set of rules
+    #
+    def dup
+      c = Coercions.new
+      @definitions.each do |defn|
+        c.extend_rules(*defn)
+      end
+      c
+    end
+
+  protected
+
     # Returns true if `value` can be considered as a valid element of the
     # domain `domain`, false otherwise.
     #
@@ -178,19 +193,10 @@ module Myrrha
     # @return [Boolean] true if `value` belongs to `domain`, false otherwise
     #
     def belongs_to?(value, domain, target_domain = domain)
-      case domain
-      when Proc
-        if domain.arity == 2
-          domain.call(value, target_domain)
-        elsif RUBY_VERSION < "1.9"
-          domain.call(value)
-        elsif domain
-          domain === value
-        end
+      if domain.is_a?(Proc) and domain.arity==2
+        domain.call(value, target_domain)
       else
-        domain.respond_to?(:===) ?
-          domain === value :
-          false
+        domain.respond_to?(:===) && (domain === value)
       end
     end
 
@@ -213,21 +219,6 @@ module Myrrha
         false
       end
     end
-
-    # Duplicates this set of rules in such a way that the original will not
-    # be affected by any change made to the copy.
-    #
-    # @return [Coercions] a copy of this set of rules
-    #
-    def dup
-      c = Coercions.new
-      @definitions.each do |defn|
-        c.extend_rules(*defn)
-      end
-      c
-    end
-
-  protected
 
     # Extends existing rules
     def extend_rules(appender, block)
