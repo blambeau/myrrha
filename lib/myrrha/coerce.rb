@@ -1,10 +1,10 @@
 require 'myrrha'
 module Myrrha
-  
+
   #
   # Defines the missing Boolean as a Myrrha's domain
   #
-  Boolean = Myrrha.domain(Object, [TrueClass, FalseClass]){|x| 
+  Boolean = Myrrha::Domain.native(Object, [TrueClass, FalseClass]){|x|
     (x==true) || (x==false)
   }
 

@@ -9,21 +9,6 @@ module Myrrha
   require_relative 'myrrha/domain'
   require_relative 'myrrha/coercions'
 
-  # Creates a domain instance by specialization by constraint
-  #
-  # @param [Class] superdom the superdomain of the created domain
-  # @param [Proc] pred the domain predicate
-  # @return [Class] the created domain
-  def self.domain(superdom = Object, subdoms=nil, &pred)
-    dom = Class.new(superdom).extend(Domain::Native)
-    dom.instance_eval {
-      @subdomains = subdoms
-      @superdomain = superdom
-      @predicate = pred
-    }
-    dom
-  end
-
   # Builds a set of coercions rules.
   #
   # Example:

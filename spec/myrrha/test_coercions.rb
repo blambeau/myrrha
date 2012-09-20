@@ -2,7 +2,7 @@ require 'spec_helper'
 describe "Myrrha.coercions" do
   
   it "should support using user-defined domains" do
-    name = Myrrha.domain{|s| s.is_a?(Symbol)}
+    name = Myrrha::Domain.native{|s| s.is_a?(Symbol)}
     rules = Myrrha.coercions do |r|
       r.coercion String, name, lambda{|s,t| s.to_sym}
       r.coercion name, String, lambda{|s,t| s.to_s}
