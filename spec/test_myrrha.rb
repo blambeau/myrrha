@@ -19,9 +19,6 @@ describe Myrrha do
     lambda{ 
       rules.coerce(true, Integer) 
     }.should raise_error(Myrrha::Error, "Unable to coerce `true` to Integer")
-    lambda{ 
-      rules.coerce("12.2", Integer)
-    }.should raise_error(Myrrha::Error, /^Unable to coerce `12.2` to Integer \(invalid value /)
   end
   
   it "should support upon rules" do

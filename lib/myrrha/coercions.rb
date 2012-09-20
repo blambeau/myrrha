@@ -161,12 +161,10 @@ module Myrrha
             end
           end
         rescue => ex
-          error = ex.message unless error
+          error = ex unless error
         end
       end
-      msg = "Unable to coerce `#{value}` to #{target_domain}"
-      msg += " (#{error})" if error
-      raise Error, msg
+      raise Error.new("Unable to coerce `#{value}` to #{target_domain}", error)
     end
     alias :apply :coerce
 
