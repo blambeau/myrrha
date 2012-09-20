@@ -10,6 +10,7 @@ task :examples => :spec_test do
       raise "Example #{file} failed." 
     end
   end
+  puts
 end
 task :spec => :examples
 task :test => :examples
