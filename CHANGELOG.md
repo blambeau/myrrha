@@ -1,7 +1,8 @@
 # 2.0.0 / FIX ME
 
 * Removed support for ruby 1.8.x
-* Coercions#subdomain? and Coercions#belongs_to? have been made protected.
+* Coercions#subdomain? and Coercions#belongs_to? are now protected
+* Myrrha::Domain is renamed as Myrrha::Domain::Native
 
 # 1.2.2 / 2012-01-26
 

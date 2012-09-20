@@ -15,7 +15,7 @@ module Myrrha
   # @param [Proc] pred the domain predicate
   # @return [Class] the created domain
   def self.domain(superdom = Object, subdoms=nil, &pred)
-    dom = Class.new(superdom).extend(Domain)
+    dom = Class.new(superdom).extend(Domain::Native)
     dom.instance_eval {
       @subdomains = subdoms
       @superdomain = superdom

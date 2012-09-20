@@ -1,4 +1,4 @@
-task :examples do
+task :examples => :spec_test do
   lib = File.expand_path('../../lib', __FILE__)
   dir = File.expand_path('../../examples', __FILE__)
   Dir["#{dir}/*.rb"].each do |file|
