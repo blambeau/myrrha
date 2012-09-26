@@ -1,11 +1,12 @@
 # 2.0.0 / FIX ME
 
-* Removed support for ruby 1.8.x
+* Removed support for ruby 1.8.7
 * Coercions#subdomain? and Coercions#belongs_to? are now protected
-* Myrrha::Domain is renamed as Myrrha::Domain::Native
-* Myrrha.domain has been removed. Use Myrrha::Domain.native instead.
 * In case of coercion failure, Myrrha::Error keeps the first coercion error under `cause`
   (that might be nil if no rule was triggered or no rule explcitely failed).
+* Myrrha::Domain is renamed as Myrrha::Domain::Native
+* Myrrha.domain has been removed. Use Myrrha::Domain.native instead.
+* Added Domain::Impl helper that helps implementing true domains supporting coercions.
 
 # 1.2.2 / 2012-01-26
 

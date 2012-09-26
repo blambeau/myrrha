@@ -25,5 +25,7 @@ module Myrrha
 
   end # module Domain
 end # module Myrrha
+require_relative 'domain/value_methods'
+require_relative 'domain/coercion_methods'
 require_relative 'domain/impl'
 require_relative 'domain/native'
