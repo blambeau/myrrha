@@ -1,14 +1,10 @@
+require 'spec_helper'
 module Myrrha
   module Domain
-    describe Native, 'when used by extension' do
+    describe SByC, 'when used by extension' do
 
       class NegInt < Integer
-        extend Myrrha::Domain::Native
-
-        def self.predicate
-          @predicate ||= lambda{|i| i<0}
-        end
-
+        extend Myrrha::Domain::SByC.new(Integer, [], lambda{|i| i<0})
       end
 
       specify("#name") {
@@ -34,10 +30,8 @@ module Myrrha
       it "should be usable in a case" do
         [-12, 12].map{|i|
           case i
-          when NegInt
-            :negint
-          when Integer
-            :integer
+          when NegInt  then :negint
+          when Integer then :integer
           end
         }.should eq([:negint, :integer])
       end

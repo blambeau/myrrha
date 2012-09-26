@@ -1,6 +1,6 @@
 require 'myrrha'
 
-PosInt = Myrrha::Domain.native(Integer){|i| i>0}
+PosInt = Myrrha::Domain.sbyc(Integer){|i| i>0}
 
 ###
   

@@ -1,10 +1,10 @@
 require 'spec_helper'
 module Myrrha
   module Domain
-    describe "#native" do
+    describe ".sbyc" do
     
       specify "the basic contract" do
-        subject = Myrrha::Domain.native{|s| s == 12}
+        subject = Myrrha::Domain.sbyc{|s| s == 12}
         subject.should be_a(Class) 
         subject.superclass.should eq(Object)
         (subject === 12).should be_true
@@ -12,7 +12,7 @@ module Myrrha
       end
     
       specify "with a ruby superclass" do
-        subject = Myrrha::Domain.native(Integer){|i| i > 0}
+        subject = Myrrha::Domain.sbyc(Integer){|i| i > 0}
         subject.should be_a(Class) 
         subject.superclass.should eq(Integer)
         (subject === 12).should be_true
@@ -20,7 +20,7 @@ module Myrrha
       end
     
       describe "A factored sub domain of Integer" do
-        PosInt = Myrrha::Domain.native(Integer){|i| i > 0}
+        PosInt = Myrrha::Domain.sbyc(Integer){|i| i > 0}
         specify("#name") {
           PosInt.name.should eq("Myrrha::Domain::PosInt")
         }
@@ -59,7 +59,7 @@ module Myrrha
             @r, @g, @b = r, g, b
           end
         end
-        RedToZero = Myrrha::Domain.native(Color){|c| c.r == 0}
+        RedToZero = Myrrha::Domain.sbyc(Color){|c| c.r == 0}
         specify("#===") {
           (RedToZero === Color.new(0,1,1)).should be_true
           (RedToZero === Color.new(1,1,1)).should be_false

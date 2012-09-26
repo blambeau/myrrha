@@ -4,8 +4,9 @@
 * Coercions#subdomain? and Coercions#belongs_to? are now protected
 * In case of coercion failure, Myrrha::Error keeps the first coercion error under `cause`
   (that might be nil if no rule was triggered or no rule explcitely failed).
-* Myrrha::Domain is renamed as Myrrha::Domain::Native
-* Myrrha.domain has been removed. Use Myrrha::Domain.native instead.
+* Myrrha::Domain is renamed as Myrrha::Domain::SByC
+* Myrrha.domain has been removed. Use Myrrha::Domain.sbyc instead.
+* Myrrha::Domain(::SByC) is now a module factory and cannot be extended as such.
 * Added Domain::Impl helper that helps implementing true domains supporting coercions.
 
 # 1.2.2 / 2012-01-26

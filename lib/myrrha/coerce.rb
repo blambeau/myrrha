@@ -1,12 +1,9 @@
 require 'myrrha'
 module Myrrha
 
-  #
-  # Defines the missing Boolean as a Myrrha's domain
-  #
-  Boolean = Myrrha::Domain.native(Object, [TrueClass, FalseClass]){|x|
-    (x==true) || (x==false)
-  }
+  class Boolean < Object
+    extend Myrrha::Domain::SByC.new(Object, [TrueClass, FalseClass], lambda{|x| (x==true) || (x==false)})
+  end
 
   #
   # Coerces _s_ to a Boolean
