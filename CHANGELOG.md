@@ -1,4 +1,4 @@
-# 2.0.0 / FIX ME
+# 2.0.0 / 2012-09-26
 
 * Removed support for ruby 1.8.7
 * Coercions#subdomain? and Coercions#belongs_to? are now protected
