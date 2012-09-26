@@ -4,11 +4,16 @@
 * Coercions#subdomain? and Coercions#belongs_to? are now protected
 * In case of coercion failure, Myrrha::Error keeps the first coercion error under `cause`
   (that might be nil if no rule was triggered or no rule explcitely failed).
+
 * Defining domains through subclassing and specialization by constraints must now be made
   as shown below. Factored domains gain a Coercions instance under `coercions`.
 
     class NegInt < Integer
       extend Myrrha::Domain::SByC.new(Integer, [], lambda{|i| i<0})
+
+      coercions do |c|
+        c.coercion(String){|v,t| ...}
+      end
     end
 
 * Added a Domain::Impl module for implementing domains from scratch (vs. sbyc). Factored
