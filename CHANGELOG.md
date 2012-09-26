@@ -4,6 +4,8 @@
 * Coercions#subdomain? and Coercions#belongs_to? are now protected
 * In case of coercion failure, Myrrha::Error keeps the first coercion error under `cause`
   (that might be nil if no rule was triggered or no rule explcitely failed).
+* Added Coercions#delegate as a shortcut for upon rules that work by delegation to the
+  value.
 
 * Defining domains through subclassing and specialization by constraints must now be made
   as shown below. Factored domains gain a Coercions instance under `coercions`.
@@ -32,8 +34,8 @@
 # 1.2.2 / 2012-01-26
 
 * Ensure that inheritance intuitively applies when duplicating a set of coercion
-  rules. Rules that, in the parent, rely on the recursive application of other 
-  rules (such as recursively applying coercions on arrays) will now correctly 
+  rules. Rules that, in the parent, rely on the recursive application of other
+  rules (such as recursively applying coercions on arrays) will now correctly
   use the rules defined on the duplicated Coercions object.
 
   In particular, this means that the following scenario now correctly works:
@@ -43,7 +45,7 @@
       end
       Dupped.apply([1, Foo.new])
 
-  In the scenario above, Foo was marshalled as the new rules was not used by 
+  In the scenario above, Foo was marshalled as the new rules was not used by
   the Array rule, defined on the parent.
 
 # 1.2.1 / 2011-08-31
@@ -56,16 +58,16 @@
 * Added the ability to created SByC domains through simple module extension:
 
       NegInt = Myrrha.domain(Integer){|i| i < 0}
-      
+
   can also be built the following way:
 
       class NegInt < Integer
         extend Myrrha::Domain
-        
+
         def self.predicate
           @predicate ||= lambda{|i| i < 0}
         end
-        
+
       end
 
 * Cleaned the development dependencies, travis-ci.org continuous integration,
@@ -84,57 +86,57 @@
 
 * Added following coercion rules for Booleans
 
-      coerce("true", TrueClass)         # => true 
-      coerce("false", FalseClass)       # => false 
+      coerce("true", TrueClass)         # => true
+      coerce("false", FalseClass)       # => false
 
-* Added coercion rule from any Object to String through ruby's String(). Note 
-  that even with this coercion rule, coerce(nil, String) returns nil as that 
+* Added coercion rule from any Object to String through ruby's String(). Note
+  that even with this coercion rule, coerce(nil, String) returns nil as that
   rule has higher priority.
-      
-* require('time') is automatically issued when trying to coerce a String to 
-  a Time. Time.parse is obviously needed.   
+
+* require('time') is automatically issued when trying to coerce a String to
+  a Time. Time.parse is obviously needed.
 
 * Myrrha::Boolean (Boolean with core extensions) is now a factored domain (see
-  below). Therefore, it is now a true Class instance. 
+  below). Therefore, it is now a true Class instance.
 
 ## Enhancements to the general coercion mechanism
 
-* An optimistic coercion is tried when a rule is encountered whose target 
+* An optimistic coercion is tried when a rule is encountered whose target
   domain is a super domain of the requested one. Coercion only succeeds if
   the coerced value correctly belongs to the latter domain. Example:
-  
+
       rules = Myrrha.coercions do |r|
-        r.coercion String, Numeric, lambda{|s,t| Integer(s)} 
-      end 
+        r.coercion String, Numeric, lambda{|s,t| Integer(s)}
+      end
       rules.coerce("12", Integer) # => 12 in 1.1.0 while it failed in 1.0.0
       rules.coerce("12", Float)   # => Myrrha::Error
 
-* You can now specify a coercion path, through an array of domains. For 
+* You can now specify a coercion path, through an array of domains. For
   example (completely contrived, of course):
 
       rules = Myrrha.coercions do |r|
         r.coercion String,  Symbol, lambda{|s,t| s.to_sym }
         r.coercion Float,   String, lambda{|s,t| s.to_s   }
         r.coercion Integer, Float,  lambda{|s,t| Float(s) }
-        r.coercion Integer, Symbol, [Float, String] 
+        r.coercion Integer, Symbol, [Float, String]
       end
       rules.coerce(12, Symbol)      # => :"12.0" as Symbol(String(Float(12)))
 
-* You can now define domains through specialization by constraint (sbyc) on ruby 
+* You can now define domains through specialization by constraint (sbyc) on ruby
   classes, using Myrrha.domain:
-  
+
       # Create a positive integer domain, as ... positive integers
       PosInt = Myrrha.domain(Integer){|i| i > 0 }
-  
-  Created domain is a real Class instance, that correctly responds to :=== 
-  and :superclass. The feature is mainly introduced for supporting the following 
+
+  Created domain is a real Class instance, that correctly responds to :===
+  and :superclass. The feature is mainly introduced for supporting the following
   kind of coercion scenarios (see README for more about this):
-  
+
       rules = Myrrha.coercions do |r|
-        r.coercion String, Integer, lambda{|s,t| Integer(s)}  
-      end 
+        r.coercion String, Integer, lambda{|s,t| Integer(s)}
+      end
       rules.coerce("12",  PosInt) # => 12
-      rules.coerce("-12", PosInt) # => ArgumentError, "Invalid value -12 for PosInt"  
+      rules.coerce("-12", PosInt) # => ArgumentError, "Invalid value -12 for PosInt"
 
 ## Bug fixes
 

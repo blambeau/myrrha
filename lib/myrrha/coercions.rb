@@ -80,6 +80,22 @@ module Myrrha
       self
     end
 
+    # Adds an upon rule that works by delegation if the value responds to `method`.
+    #
+    # Example:
+    #
+    #     Myrrha.coercions do |r|
+    #       r.delegate(:to_foo)
+    #
+    #       # is a shortcut for
+    #       r.upon(lambda{|v,_| v.respond_to?(:to_foo)}){|v,_| v.to_foo}
+    #     end
+    #
+    def delegate(method, &convproc)
+      convproc ||= lambda{|v,t| v.send(method) }
+      upon(lambda{|v,t| v.respond_to?(method) }, convproc)
+    end
+
     # Adds a coercion rule from a source to a target domain.
     #
     # The conversion can be provided through `converter` or via a block
