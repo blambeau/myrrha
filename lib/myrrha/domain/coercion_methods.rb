@@ -3,7 +3,7 @@ module Myrrha
     module CoercionMethods
 
       def coercions(&bl)
-        @coercions ||= Coercions.new
+        @coercions ||= Coercions.new{|c| c.main_target_domain = self}
         @coercions.append(&bl) if bl
         @coercions
       end

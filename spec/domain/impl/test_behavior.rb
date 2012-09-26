@@ -27,6 +27,10 @@ module Myrrha
       origin.theta.should eq(0.0)
     end
 
+    it 'has coercions properly installed' do
+      point.coercions.main_target_domain.should eq(point)
+    end
+
     it 'supports expected coercions' do
       point.coerce(nil).should eq(origin)
       point.coerce(true).should eq(oneone)

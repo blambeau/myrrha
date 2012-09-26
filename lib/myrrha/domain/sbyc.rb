@@ -16,6 +16,7 @@ module Myrrha
         define_sub_domains_method
         define_predicate_method
         include_type_methods
+        include_coercion_methods
       end
 
       def define_super_domain_method
@@ -35,6 +36,10 @@ module Myrrha
 
       def include_type_methods
         module_eval{ include TypeMethods }
+      end
+
+      def include_coercion_methods
+        module_eval{ include CoercionMethods }
       end
 
       module TypeMethods

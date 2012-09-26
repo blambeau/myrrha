@@ -27,6 +27,11 @@ module Myrrha
         NegInt.superdomain_of?(Integer).should be_false
       }
 
+      specify("#coercions"){
+        NegInt.coercions.should be_a(Myrrha::Coercions)
+        NegInt.coercions.main_target_domain.should eq(NegInt)
+      }
+
       it "should be usable in a case" do
         [-12, 12].map{|i|
           case i
