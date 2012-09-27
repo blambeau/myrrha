@@ -1,7 +1,7 @@
 require 'spec_helper'
 module Myrrha
   module Domain
-    class Impl
+    class Scalar
       describe ValueMethods do
 
         let(:domain){

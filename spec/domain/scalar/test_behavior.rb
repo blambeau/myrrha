@@ -4,7 +4,7 @@ module Myrrha
 
     let(:point){
       Class.new{
-        include Myrrha::Domain::Impl.new([:r, :theta])
+        include Myrrha::Domain::Scalar.new([:r, :theta])
 
         coercions do |c|
           c.upon(NilClass)     {|v,t| new(0.0,0.0)                   }

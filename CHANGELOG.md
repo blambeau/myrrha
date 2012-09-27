@@ -1,3 +1,7 @@
+# 2.1.0 / FIX ME
+
+* Domain::Impl -> Domain::Scalar (Impl is still an alias to avoid a major revision)
+
 # 2.0.0 / 2012-09-26
 
 * Removed support for ruby 1.8.7
@@ -24,7 +28,7 @@
   a Coercions instance under `coercions`.
 
     class Point
-      include Domain::Impl.new(:x, :y)
+      include Domain::Impl.new([:x, :y])
 
       coercions do |c|
         c.coercion(String){|v,t| ...}

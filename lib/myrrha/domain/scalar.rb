@@ -1,6 +1,6 @@
 module Myrrha
   module Domain
-    class Impl < Module
+    class Scalar < Module
 
       def initialize(component_names)
         @component_names = component_names.freeze
@@ -45,6 +45,7 @@ module Myrrha
         clazz.extend(CoercionMethods)
       end
 
-    end # class Impl
+    end # class Scalar
+    Impl = Scalar
   end # module Domain
 end # module Myrrha
