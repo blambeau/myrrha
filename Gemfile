@@ -1,5 +1,9 @@
 source 'http://rubygems.org'
 
+group :runtime do
+  gem "domain", "= 1.0.0.rc1"
+end
+
 group :test do
   gem "rake", "~> 0.9.2"
   gem "rspec", "~> 2.8.0"

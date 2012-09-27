@@ -1,9 +1,6 @@
 require 'myrrha'
 module Myrrha
-
-  class Boolean < Object
-    extend Myrrha::Domain::SByC.new(Object, [TrueClass, FalseClass], lambda{|x| (x==true) || (x==false)})
-  end
+  Boolean = Domain.union(TrueClass, FalseClass)
 
   #
   # Coerces _s_ to a Boolean

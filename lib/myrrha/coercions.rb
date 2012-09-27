@@ -225,8 +225,8 @@ module Myrrha
     def subdomain?(child, parent)
       if child == parent
         true
-      elsif parent.respond_to?(:superdomain_of?)
-        parent.superdomain_of?(child)
+      elsif parent.respond_to?(:super_domain_of?)
+        parent.super_domain_of?(child)
       elsif child.respond_to?(:superclass) && child.superclass
         subdomain?(child.superclass, parent)
       else

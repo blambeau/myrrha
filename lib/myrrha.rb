@@ -1,12 +1,12 @@
 require_relative "myrrha/version"
 require_relative "myrrha/loader"
 require_relative 'myrrha/errors'
+require_relative 'myrrha/ext/domain'
 #
 # Myrrha -- the missing coercion framework for Ruby
 #
 module Myrrha
 
-  require_relative 'myrrha/domain'
   require_relative 'myrrha/coercions'
 
   # Builds a set of coercions rules.

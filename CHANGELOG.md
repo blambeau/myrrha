@@ -1,6 +1,7 @@
-# 2.1.0 / FIX ME
+# 3.0.0 / FIX ME
 
-* Domain::Impl -> Domain::Scalar (Impl is still an alias to avoid a major revision)
+* Implementation of domains has been moved to the domain gem. The syntax to create domains
+  has therefore changed. Myrrha::Domain does no longer exists.
 
 # 2.0.0 / 2012-09-26
 
