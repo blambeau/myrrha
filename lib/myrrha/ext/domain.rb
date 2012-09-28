@@ -9,21 +9,11 @@ module Domain
 
     def coerce(arg)
       coercions.coerce(arg, self)
-    rescue Myrrha::Error
+    rescue Myrrha::Error => ex
       domain_error!(arg)
     end
+    alias_method :[], :coerce
 
-    def [](first = NOT_PROVIDED, *args)
-      if first == NOT_PROVIDED
-        const_get(:EMPTY) rescue type_error!([])
-      elsif args.empty?
-        coerce(first)
-      else
-        coerce(args.unshift(first))
-      end
-    end
-
-    NOT_PROVIDED = Object.new
   end # module CoercionMethods
   include CoercionMethods
 end # module Domain
