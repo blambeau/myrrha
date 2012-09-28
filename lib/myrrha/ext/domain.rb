@@ -13,6 +13,10 @@ module Domain
       domain_error!(arg)
     end
 
+    def [](first, *args)
+      args.empty? ? coerce(first) : coerce(args.unshift(first))
+    end
+
   end # module CoercionMethods
   include CoercionMethods
 end # module Domain
