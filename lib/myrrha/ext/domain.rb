@@ -15,7 +15,7 @@ module Domain
 
     def [](first = NOT_PROVIDED, *args)
       if first == NOT_PROVIDED
-        coerce([])
+        const_get(:EMPTY) rescue type_error!([])
       elsif args.empty?
         coerce(first)
       else
