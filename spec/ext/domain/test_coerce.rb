@@ -34,14 +34,6 @@ describe Domain, "coerce" do
     it 'supports Array' do
       Point[[2, 2]].should eq(point_2_2)
     end
-
-    it 'supports Array literals' do
-      Point[2, 2].should eq(point_2_2)
-    end
-
-    it 'supports empty Array literals' do
-      Point[].should be(Point::EMPTY)
-    end
   end
 
 end
