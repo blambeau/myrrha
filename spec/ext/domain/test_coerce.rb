@@ -7,8 +7,8 @@ describe Domain, "coerce" do
 
   before do
     domain.coercions do |c|
-      c.coercion(String){|v,_| expected       }
-      c.coercion(Array) {|v,_| domain.new(*v) }
+      c.coercion(String){|v,_| expected }
+      c.coercion(Array) {|v,_| expected }
     end
   end
 
@@ -29,7 +29,11 @@ describe Domain, "coerce" do
     end
 
     it 'supports Array literals' do
-      domain[1, 3].should eq(domain.new(1, 3))
+      domain[1, 3].should eq(expected)
+    end
+
+    it 'supports empty Array literals' do
+      domain[].should eq(expected)
     end
   end
 

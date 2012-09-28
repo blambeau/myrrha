@@ -13,10 +13,17 @@ module Domain
       domain_error!(arg)
     end
 
-    def [](first, *args)
-      args.empty? ? coerce(first) : coerce(args.unshift(first))
+    def [](first = NOT_PROVIDED, *args)
+      if first == NOT_PROVIDED
+        coerce([])
+      elsif args.empty?
+        coerce(first)
+      else
+        coerce(args.unshift(first))
+      end
     end
 
+    NOT_PROVIDED = Object.new
   end # module CoercionMethods
   include CoercionMethods
 end # module Domain
