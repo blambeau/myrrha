@@ -9,6 +9,8 @@ module Domain
 
     def coerce(arg)
       coercions.coerce(arg, self)
+    rescue Myrrha::Error
+      domain_error!(arg)
     end
 
   end # module CoercionMethods

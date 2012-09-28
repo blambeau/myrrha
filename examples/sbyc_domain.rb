@@ -13,7 +13,7 @@ PosInt.new(10)
 begin
   PosInt.new(-10)
   raise "Unexpected case: PosInt.new(-10) succeeds"
-rescue ArgumentError => ex
+rescue TypeError => ex
   puts ex.message
 end
 
