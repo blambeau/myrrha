@@ -10,6 +10,7 @@ module Domain
     def coerce(arg)
       coercions.coerce(arg, self)
     rescue Myrrha::Error => ex
+      raise ex.cause if ex.cause
       domain_error!(arg)
     end
     alias_method :[], :coerce
