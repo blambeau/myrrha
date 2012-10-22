@@ -308,12 +308,13 @@ A set of coercion rules can simply be created from scratch as follows:
 
         # PRE: - user wants to coerce `value` to a requested_domain
         #      - belongs_to?(value, SourceDomain)
-        #      - subdomain?(TargetDomain, requested_domain)
+        #      - TargetDomain <=> requested_domain
 
         # implement the coercion or throw(:newrule)
         returned_value = something(value)
 
-        # POST: returned_value belongs to requested_domain
+        # POST: returned_value belongs either to TorgetDomain or to
+        #       requested_domain (very smart converter)
 
       end
 
