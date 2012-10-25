@@ -3,7 +3,7 @@ module Myrrha
 
     MAJOR = 3
     MINOR = 0
-    TINY  = "0.rc6"
+    TINY  = "0.rc7"
 
     def self.to_s
       [ MAJOR, MINOR, TINY ].join('.')
