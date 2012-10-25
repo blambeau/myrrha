@@ -2,7 +2,7 @@ module Myrrha
 
   # Raised when a coercion fails
   class Error < StandardError
-    attr_reader :cause
+    attr_accessor :cause
     def initialize(msg, cause = $!)
       super(msg)
       @cause = cause

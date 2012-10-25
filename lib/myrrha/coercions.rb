@@ -6,6 +6,9 @@ module Myrrha
     # @return [Domain] The main target domain, if any
     attr_accessor :main_target_domain
 
+    # @return [Proc] the proc that handles coercion errors
+    attr_accessor :error_handler
+
     # Creates an empty list of coercion rules
     def initialize(&defn)
       @definitions = []
@@ -14,6 +17,9 @@ module Myrrha
       @fallbacks = []
       @appender = :<<
       @main_target_domain = nil
+      @error_handler = lambda{|value, target_domain, cause|
+        raise Error.new("Unable to coerce `#{value}` to #{target_domain}", cause)
+      }
       extend_rules(:<<, defn) if defn
     end
 
@@ -180,7 +186,7 @@ module Myrrha
           error = ex unless error
         end
       end
-      raise Error.new("Unable to coerce `#{value}` to #{target_domain}", error)
+      error_handler.call(value, target_domain, error)
     end
     alias :apply :coerce
 

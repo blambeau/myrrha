@@ -2,6 +2,8 @@
 
 * Implementation of domains has been moved to the domain gem. The syntax to create domains
   has therefore changed. Myrrha::Domain does no longer exists.
+* An error handler can now be set on Coercions rules. The default one raises a
+  Myrrha::Error, preserving backward compatibility.
 
 # 2.0.0 / 2012-09-26
 
