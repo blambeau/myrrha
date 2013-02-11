@@ -4,6 +4,7 @@
   has therefore changed. Myrrha::Domain does no longer exists.
 * An error handler can now be set on Coercions rules. The default one raises a
   Myrrha::Error, preserving backward compatibility.
+* Fixed a to_ruby_literal bug that made JRuby using Marshall much too often.
 
 # 2.0.0 / 2012-09-26
 

@@ -15,7 +15,7 @@ module Myrrha
     end
     
     # On safe .inspect 
-    safe = lambda{|x| TO_RUBY_THROUGH_INSPECT.include?(x.class)}
+    safe = lambda{|x,_| TO_RUBY_THROUGH_INSPECT.include?(x.class)}
     r.coercion(safe) do |s,t| 
       s.inspect
     end

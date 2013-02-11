@@ -229,7 +229,7 @@ module Myrrha
     #         otherwise.
     #
     def subdomain?(child, parent)
-      parent >= child rescue false
+      (child == parent) || (parent >= child rescue false)
     end
 
     # Extends existing rules

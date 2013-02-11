@@ -21,7 +21,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bluecloth (~> 2.2.0)
+  bluecloth (~> 2.2)
   domain (~> 1.0.0.rc3)
   rake (~> 10.0)
   rspec (~> 2.10)
