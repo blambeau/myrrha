@@ -10,7 +10,7 @@ variables:
   upper:
     Myrrha
   version:
-    3.0.0.rc7
+    3.0.0.rc8
   summary: |-
     Myrrha provides the coercion framework which is missing to Ruby.
   description: |-
