@@ -1,4 +1,4 @@
-# 3.0.0 / FIX ME
+# 3.0.0 / 2013-02-11
 
 * Implementation of domains has been moved to the domain gem. The syntax to create domains
   has therefore changed. Myrrha::Domain does no longer exists.
