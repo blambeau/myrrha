@@ -1,6 +1,6 @@
 template-info:
   name: rubygem.noe
-  version: 1.7.4
+  version: 2.0.1
   manifest:
     tasks/debug_mail.txt:
       safe-override: false
@@ -10,7 +10,7 @@ variables:
   upper:
     Myrrha
   version:
-    3.0.0.rc8
+    3.0.0
   summary: |-
     Myrrha provides the coercion framework which is missing to Ruby.
   description: |-

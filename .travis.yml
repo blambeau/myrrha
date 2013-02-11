@@ -9,6 +9,7 @@ rvm:
   - jruby-head
   - rbx-19mode
   - ruby-head
+  - rbx-head
 notifications:
   email:
     - blambeau@gmail.com
