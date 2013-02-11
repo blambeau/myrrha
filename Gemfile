@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 group :runtime do
-  gem "domain", "~> 1.0.0.rc3"
+  gem "domain", "~> 1.0"
 end
 
 group :test do

@@ -26,7 +26,7 @@ variables:
     - http://github.com/blambeau/myrrha
     - http://rubygems.org/gems/myrrha
   dependencies: 
-    - {name: domain,       version: "~> 1.0.0.rc3", groups: [runtime]      }
+    - {name: domain,       version: "~> 1.0",       groups: [runtime]      }
     - {name: rake,         version: "~> 10.0",      groups: [test, release]}
     - {name: rspec,        version: "~> 2.10",      groups: [test, release]}
     - {name: yard,         version: "~> 0.7.4",     groups: [doc          ]}
